@@ -125,7 +125,7 @@ const Expense = () => {
           />
         )}
       </div>
-      <div className="w-full max-h-[50vh] mt-5 overflow-hidden shadow-lg px-4 py-4 overflow-x-auto noscrollbar">
+      <div className="w-full max-h-[50vh] mt-5  shadow-lg px-4 py-4 overflow-x-auto noscrollbar">
         <h1 className="text-lg font-semibold">Expense</h1>
         <table className="w-full ">
           <thead>
@@ -195,7 +195,7 @@ const Expense = () => {
             <div className="flex justify-between">
               <h1 className="text-xl font-semibold">Add Expense</h1>
               <i
-                onClick={() => setshowAddIncome(false)}
+                onClick={() => setshowAddExpense(false)}
                 className="ri-close-fill"
               ></i>
             </div>

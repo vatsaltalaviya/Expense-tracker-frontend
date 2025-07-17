@@ -81,6 +81,7 @@ const Income = () => {
     setpaymentMethod("");
     setsource("");
   };
+console.log(IncomeTransaction);
 
   const handleDelete = async (Id) => {
     try {
@@ -122,7 +123,7 @@ const Income = () => {
           />
         )}
       </div>
-      <div className="w-full max-h-[50vh] mt-5 overflow-hidden shadow-lg px-4 py-4 overflow-x-auto noscrollbar">
+      <div className="w-full max-h-[50vh] mt-5 shadow-lg px-4 py-4 overflow-x-auto noscrollbar">
         <h1 className="text-lg font-semibold">Income</h1>
         <table className="w-full ">
           <thead>
@@ -247,6 +248,8 @@ const Income = () => {
             <div className="border px-2 py-1 rounded">
               <input
                 type="date"
+                name="date"
+                id="date"
                 className="w-full py-1 px-2 outline-none rounded"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
