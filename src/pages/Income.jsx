@@ -81,7 +81,6 @@ const Income = () => {
     setpaymentMethod("");
     setsource("");
   };
-console.log(IncomeTransaction);
 
   const handleDelete = async (Id) => {
     try {
