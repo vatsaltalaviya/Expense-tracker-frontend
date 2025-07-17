@@ -16,15 +16,6 @@ const Sidebar = ({sidemenu}) => {
           SpendTrack
         </h1>
       </div>
-      {/* ====================== Search Input ============================== */}
-
-      <div className="flex items-center gap-2 px-2 py-1">
-        <input
-          type="text"
-          placeholder="Search..."
-          className="px-2 py-1 bg-stone-700 border-0 outline-none rounded placeholder:font-medium"
-        />
-      </div>
 
       {/* ================== main memu =========================== */}
       <div className="w-full space-y-3 px-2 py-3">

@@ -26,7 +26,8 @@ const Expense = () => {
     expenseLoading,
     AddexpenseLoading,
   } = useSelector((state) => state.expense);
-  const id = localStorage.getItem("user");
+  const id = localStorage.getItem("userid");
+  
   useEffect(() => {
     dispatch(getExpense(id));
     dispatch(getExpenseTrend());

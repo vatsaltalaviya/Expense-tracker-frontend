@@ -23,7 +23,7 @@ const Income = () => {
   const dispatch = useDispatch();
   const { income, incomeTrend, trendLoading, incomeLoading, AddincomeLoading } =
     useSelector((state) => state.income);
-  const id = localStorage.getItem("user");
+  const id = localStorage.getItem("userid");
   useEffect(() => {
     dispatch(getIncome(id));
     dispatch(getIncomeTrend());

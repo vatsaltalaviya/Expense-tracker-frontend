@@ -38,7 +38,7 @@ const App = () => {
   ];
 
   const logOut = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem("userid");
     sessionStorage.removeItem("AccessToken")
     sessionStorage.removeItem("refreshToken")
   }

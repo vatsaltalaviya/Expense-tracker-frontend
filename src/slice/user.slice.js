@@ -10,7 +10,7 @@ export const LoginUser = createAsyncThunk("LoginUser",async(UserData,thunkAPI)=>
             sessionStorage.setItem("refreshToken",data.Refreshtoken)
             sessionStorage.setItem("AccessToken",data.Accesstoken)
             localStorage.setItem("username",data.user.username)
-            localStorage.setItem("user",data.user.id)
+            localStorage.setItem("userid",data.user.id)
             return data.user
         }
     } catch (error) {
@@ -27,6 +27,7 @@ export const registerUser = createAsyncThunk("registerUser",async(UserData,thunk
             sessionStorage.setItem("refreshToken",data.Refreshtoken)
             sessionStorage.setItem("AccessToken",data.Accesstoken)
             localStorage.setItem("username",data.user.username)
+            localStorage.setItem("userid",data.user.id)
             return data.user
         }
     } catch (error) {
