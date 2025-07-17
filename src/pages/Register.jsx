@@ -37,8 +37,8 @@ const Register = () => {
 
 
   return (
-    <div className="flex justify-center items-center h-screen w-full text-black bg-gray-100">
-      <div className="bg-white flex shadow-lg rounded-4xl p-2 xl:p-10  gap-3 w-fit">
+    <div className="lg:flex justify-center items-center h-screen w-full text-black bg-white lg:bg-gray-100">
+      <div className="bg-white flex justify-center lg:shadow-lg lg:rounded-4xl p-2 xl:p-10  gap-3 ">
         <div className="w-xs xl:w-sm h-full lg:block  hidden shrink-0">
           <img
             className="w-full object-cover shadow-2xl rounded-3xl"
@@ -49,7 +49,7 @@ const Register = () => {
        
           <form
             onSubmit={handleSubmit}
-            className="xl:px-5  xl:w-xl shrink-0 py-1 mt-2"
+            className="xl:px-5 w-full xl:w-xl shrink-0 py-1 mt-2"
           >
             <div className="flex flex-col items-center gap-2 mb-4">
               <img
@@ -111,7 +111,7 @@ const Register = () => {
             <div className="py-2">
               <button
                 type="submit"
-                className="w-full text-primary border hover:text-white hover:bg-primary transition-all duration-300 rounded-lg px-3 py-3 font-medium text-lg md:text-2xl"
+                className="w-full  border text-white bg-primary transition-all duration-300 rounded-lg px-3 py-3 font-medium text-lg md:text-2xl"
               >
                 {loading?<BeatLoader size={6} color="#ffffff" />: "sign Up"}
               </button>
