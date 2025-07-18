@@ -1,5 +1,5 @@
 import { BarChart, pieArcLabelClasses, PieChart } from "@mui/x-charts";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getIncomeExpenseTrand,
@@ -10,6 +10,7 @@ import { getIncome } from "../slice/income.slice";
 import { getExpense } from "../slice/expense.slice";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { animate , motion } from "framer-motion";
 
 const chartSetting = {
   yAxis: [
@@ -23,6 +24,11 @@ const chartSetting = {
 
 const Dashboard = () => {
   const id = useMemo(() => localStorage.getItem("userid"), []);
+
+  const [totalincome , settotalincome] = useState(0)
+  const [totalexpense, settotalexpense] = useState(0)
+  const [totalbal, settotalbal] = useState(0)
+
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -39,6 +45,44 @@ const Dashboard = () => {
     dispatch(getIncome(id));
     dispatch(getExpense(id));
   }, [dispatch, id]);
+
+
+
+ const [animated, setAnimated] = useState(false);
+
+useEffect(() => {
+  if (
+    summary?.totalIncome > 0 ||
+    summary?.totalExpense > 0 ||
+    summary?.balance > 0
+  ) {
+    if (!animated) {
+      setAnimated(true);
+
+      animate(0, summary.totalIncome || 0, {
+        duration: 2,
+        ease: "easeOut",
+        onUpdate: (latest) => settotalincome(Math.round(latest)),
+      });
+
+      animate(0, summary.totalExpense || 0, {
+        duration: 2,
+        ease: "easeOut",
+        onUpdate: (latest) => settotalexpense(Math.round(latest)),
+      });
+
+      animate(0, summary.balance || 0, {
+        duration: 2,
+        ease: "easeOut",
+        onUpdate: (latest) => settotalbal(Math.round(latest)),
+      });
+    }
+  }
+}, [summary, animated]);
+
+
+
+
 
   const RecentTransaction = useMemo(() => {
     return recentTransaction?.map((d) => {
@@ -198,7 +242,7 @@ const Dashboard = () => {
       <div className="w-full flex flex-col xl:flex-row gap-4 items-center py-4">
         <div className="w-full p-6 flex justify-between bg-violet-300 shadow-lg shadow-violet-400 rounded">
           <div className="shrink-0">
-            <h1 className="text-2xl font-semibold">₹{summary?.totalIncome}</h1>
+            <h1 className="text-2xl font-semibold">₹{totalincome}</h1>
             <h1 className="text-xs font-semibold">Total Income</h1>
           </div>
           <div className="w-full flex justify-end items-center">
@@ -211,7 +255,7 @@ const Dashboard = () => {
         </div>
         <div className="w-full p-6 flex justify-between bg-emerald-100 shadow-lg shadow-emerald-200 rounded">
           <div className="shrink-0">
-            <h1 className="text-2xl font-semibold">₹{summary?.totalExpense}</h1>
+            <motion.h1 className="text-2xl font-semibold">₹{totalexpense}</motion.h1>
             <h1 className="text-xs font-semibold">Total Expense</h1>
           </div>
           <div className="w-full flex justify-end items-center">
@@ -224,7 +268,7 @@ const Dashboard = () => {
         </div>
         <div className="w-full p-6 flex justify-between bg-white  shadow-lg  rounded">
           <div className="shrink-0">
-            <h1 className="text-2xl font-semibold">₹{summary?.balance}</h1>
+            <h1 className="text-2xl font-semibold">₹{totalbal}</h1>
             <h1 className="text-xs font-semibold">Total Balance</h1>
           </div>
           <div className="w-full flex justify-end items-center">
