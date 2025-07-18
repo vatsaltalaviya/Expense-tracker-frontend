@@ -8,8 +8,7 @@ import {
   getIncomeTrend,
 } from "../slice/income.slice";
 import { BeatLoader } from "react-spinners";
-
-
+import axios from "axios";
 
 const Income = () => {
   const [showAddIncome, setshowAddIncome] = useState(false);
@@ -28,8 +27,6 @@ const Income = () => {
     dispatch(getIncome(id));
     dispatch(getIncomeTrend());
   }, []);
-
-
 
   const IncomeTransaction = useMemo(() => {
     return income?.map((d) => {
@@ -93,6 +90,64 @@ const Income = () => {
     }
   };
 
+  const handleDownloadExcel =async()=>{
+    
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/export/income/${id}`, {
+        responseType: "blob", // 👈 Important to receive file as Blob
+      })
+     
+      
+      if(res.status == 200){
+         // Create a blob from response
+      const blob = new Blob([res.data], {
+        type:
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      // Create a download link
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = "income-data.xlsx"; // Set filename
+      link.click(); // Trigger download
+
+      // Cleanup
+      window.URL.revokeObjectURL(link.href);
+      }
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
+  const handleDownloadPDF =async()=>{
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/export/income/pdf/${id}`, {
+        responseType: "blob", // 👈 Important to receive file as Blob
+      })
+
+      
+      if(res.status == 200){
+         // Create a blob from response
+      const blob = new Blob([res.data], {
+        type:
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+
+      // Create a download link
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = "income-data.pdf"; // Set filename
+      link.click(); // Trigger download
+
+      // Cleanup
+      window.URL.revokeObjectURL(link.href);
+      }
+    } catch (error) {
+      console.error(error);
+      
+    }
+  }
+
   return (
     <div className="w-full">
       <div className="w-full shadow-lg rounded-lg px-2 py-2">
@@ -123,7 +178,25 @@ const Income = () => {
         )}
       </div>
       <div className="w-full max-h-[50vh] mt-5 shadow-lg px-4 py-4 overflow-x-auto noscrollbar">
-        <h1 className="text-lg font-semibold">Income</h1>
+        <div className="flex py-1 justify-between">
+          <h1 className="text-lg font-semibold">Income</h1>
+          <div className="flex gap-2">
+            <button
+            onClick={()=>handleDownloadExcel()}
+              className="px-3 py-1 rounded bg-zinc-200"
+              title="Export Excel"
+            >
+              <i className="ri-file-excel-line"></i>
+            </button>
+            <button
+            onClick={()=>handleDownloadPDF()}
+              className="px-3 py-1 rounded bg-zinc-200"
+              title="Export PDF"
+            >
+              <i className="ri-file-pdf-2-line"></i>
+            </button>
+          </div>
+        </div>
         <table className="w-full ">
           <thead>
             <tr>

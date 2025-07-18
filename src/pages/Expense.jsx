@@ -8,6 +8,7 @@ import {
   getExpenseTrend,
 } from "../slice/expense.slice";
 import { BeatLoader } from "react-spinners";
+import axios from "axios";
 
 const Expense = () => {
   const [showAddExpense, setshowAddExpense] = useState(false);
@@ -94,6 +95,63 @@ const Expense = () => {
       console.error(error);
     }
   };
+  const handleDownloadExcel =async()=>{
+      
+      try {
+        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/export/expense/${id}`, {
+          responseType: "blob", // 👈 Important to receive file as Blob
+        })
+       
+        
+        if(res.status == 200){
+           // Create a blob from response
+        const blob = new Blob([res.data], {
+          type:
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+  
+        // Create a download link
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        link.download = "expense-data.xlsx"; // Set filename
+        link.click(); // Trigger download
+  
+        // Cleanup
+        window.URL.revokeObjectURL(link.href);
+        }
+      } catch (error) {
+        console.error(error);
+        
+      }
+    }
+    const handleDownloadPDF =async()=>{
+      try {
+        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/export/expense/pdf/${id}`, {
+          responseType: "blob", // 👈 Important to receive file as Blob
+        })
+  
+        
+        if(res.status == 200){
+           // Create a blob from response
+        const blob = new Blob([res.data], {
+          type:
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+  
+        // Create a download link
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        link.download = "expense-data.pdf"; // Set filename
+        link.click(); // Trigger download
+  
+        // Cleanup
+        window.URL.revokeObjectURL(link.href);
+        }
+      } catch (error) {
+        console.error(error);
+        
+      }
+    }
 
   
 
@@ -127,7 +185,25 @@ const Expense = () => {
         )}
       </div>
       <div className="w-full max-h-[50vh] mt-5  shadow-lg px-4 py-4 overflow-x-auto noscrollbar">
-        <h1 className="text-lg font-semibold">Expense</h1>
+        <div className="flex py-1 justify-between">
+         <h1 className="text-lg font-semibold">Expense</h1>
+       <div className="flex gap-2">
+            <button
+              className="px-3 py-1 rounded bg-zinc-200"
+              title="Export Excel"
+              onClick={()=>handleDownloadExcel()}
+            >
+              <i className="ri-file-excel-line"></i>
+            </button>
+            <button
+              className="px-3 py-1 rounded bg-zinc-200"
+              title="Export PDF"
+              onClick={()=>handleDownloadPDF()}
+            >
+              <i className="ri-file-pdf-2-line"></i>
+            </button>
+          </div>
+       </div>
         <table className="w-full ">
           <thead>
             <tr>

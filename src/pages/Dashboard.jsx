@@ -9,6 +9,7 @@ import {
 import { getIncome } from "../slice/income.slice";
 import { getExpense } from "../slice/expense.slice";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const chartSetting = {
   yAxis: [
@@ -20,14 +21,11 @@ const chartSetting = {
   height: 330,
 };
 
-
-
-
 const Dashboard = () => {
-  const id = useMemo(() => localStorage.getItem("user"), []);
+  const id = useMemo(() => localStorage.getItem("userid"), []);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { summary, recentTransaction, summaryLoading, chartTrand } =
     useSelector((state) => state.summary);
   const { income, incomeLoading } = useSelector((state) => state.income);
@@ -100,7 +98,6 @@ const Dashboard = () => {
     });
   }, [expense]);
 
-  
   const months = [
     "Jan",
     "Feb",
@@ -133,8 +130,68 @@ const Dashboard = () => {
     return monthlyData;
   };
 
-  const monthlyDataset = formatChartData(chartTrand?.income, chartTrand?.expense);
+  const monthlyDataset = formatChartData(
+    chartTrand?.income,
+    chartTrand?.expense
+  );
 
+    const handleDownloadExcel =async()=>{
+        
+        try {
+          const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/export/transaction/${id}`, {
+            responseType: "blob", // 👈 Important to receive file as Blob
+          })
+         
+          
+          if(res.status == 200){
+             // Create a blob from response
+          const blob = new Blob([res.data], {
+            type:
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          });
+    
+          // Create a download link
+          const link = document.createElement("a");
+          link.href = window.URL.createObjectURL(blob);
+          link.download = "transaction-data.xlsx"; // Set filename
+          link.click(); // Trigger download
+    
+          // Cleanup
+          window.URL.revokeObjectURL(link.href);
+          }
+        } catch (error) {
+          console.error(error);
+          
+        }
+      }
+      const handleDownloadPDF =async()=>{
+        try {
+          const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/export/transaction/pdf/${id}`, {
+            responseType: "blob", // 👈 Important to receive file as Blob
+          })
+    
+          
+          if(res.status == 200){
+             // Create a blob from response
+          const blob = new Blob([res.data], {
+            type:
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          });
+    
+          // Create a download link
+          const link = document.createElement("a");
+          link.href = window.URL.createObjectURL(blob);
+          link.download = "Transaction-data.pdf"; // Set filename
+          link.click(); // Trigger download
+    
+          // Cleanup
+          window.URL.revokeObjectURL(link.href);
+          }
+        } catch (error) {
+          console.error(error);
+          
+        }
+      }
 
   return (
     <div className="py-2">
@@ -200,74 +257,110 @@ const Dashboard = () => {
         <div className="w-full xl:w-1/2 shadow-lg shadow-zinc-300 rounded-xl py-2 px-2">
           <div className="flex w-full justify-between py-4">
             <h1 className="text-lg font-semibold">Expenses</h1>
-            <button onClick={()=>navigate('/expense')} className="text-xs px-2 py-1 rounded font-medium bg-zinc-200">
+            <button
+              onClick={() => navigate("/expense")}
+              className="text-xs px-2 py-1 rounded font-medium bg-zinc-200"
+            >
               See All <i className="ri-arrow-right-line"></i>
             </button>
           </div>
 
-          {expenseLoading?<TableLoading />:<>{ExpenseTransaction?.slice(0, 5)?.map((data, id) => (
-            <div
-              key={id}
-              className="flex items-center justify-between rounded-lg mt-2 hover:bg-zinc-100 transition-all duration-150 px-2 py-4"
-            >
-              <div className="flex gap-4">
-                <div className="rounded ">
-                  <img
-                    className="w-10 "
-                    src="https://res.cloudinary.com/dbpleky0i/image/upload/v1752038225/image_ji8lre.png"
-                    alt=""
-                  />
+          {expenseLoading ? (
+            <TableLoading />
+          ) : (
+            <>
+              {ExpenseTransaction?.slice(0, 5)?.map((data, id) => (
+                <div
+                  key={id}
+                  className="flex items-center justify-between rounded-lg mt-2 hover:bg-zinc-100 transition-all duration-150 px-2 py-4"
+                >
+                  <div className="flex gap-4">
+                    <div className="rounded ">
+                      <img
+                        className="w-10 "
+                        src="https://res.cloudinary.com/dbpleky0i/image/upload/v1752038225/image_ji8lre.png"
+                        alt=""
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <h1 className="text-lg font-medium">{data.catagory}</h1>
+                      <h3 className="text-xs text-gray-400 font-medium">
+                        {data.date}
+                      </h3>
+                    </div>
+                  </div>
+                  <span className="px-2 py-1 bg-red-200 rounded-lg text-red-500 font-semibold">
+                    ₹{data.amount}
+                  </span>
                 </div>
-                <div className="flex flex-col">
-                  <h1 className="text-lg font-medium">{data.catagory}</h1>
-                  <h3 className="text-xs text-gray-400 font-medium">
-                    {data.date}
-                  </h3>
-                </div>
-              </div>
-              <span className="px-2 py-1 bg-red-200 rounded-lg text-red-500 font-semibold">
-                ₹{data.amount}
-              </span>
-            </div>
-          ))}</>}
+              ))}
+            </>
+          )}
         </div>
         <div className="w-full xl:w-1/2 shadow-lg shadow-zinc-300 rounded-xl py-2 px-2">
           <div className="flex w-full justify-between py-4">
             <h1 className="text-lg font-semibold">Income</h1>
-            <button onClick={()=>navigate('/income')} className="text-xs px-2 py-1 rounded font-medium bg-zinc-200">
+            <button
+              onClick={() => navigate("/income")}
+              className="text-xs px-2 py-1 rounded font-medium bg-zinc-200"
+            >
               See All <i className="ri-arrow-right-line"></i>
             </button>
           </div>
 
-          {incomeLoading?<TableLoading />:<>{IncomeTransaction.slice(0, 5)?.map((data, id) => (
-            <div
-              key={id}
-              className="flex items-center justify-between rounded-lg mt-2 hover:bg-zinc-100 transition-all duration-150 px-2 py-4"
-            >
-              <div className="flex gap-4">
-                <div className="rounded ">
-                  <img
-                    className="w-10 "
-                    src="https://res.cloudinary.com/dbpleky0i/image/upload/v1752038225/image_ji8lre.png"
-                    alt=""
-                  />
+          {incomeLoading ? (
+            <TableLoading />
+          ) : (
+            <>
+              {IncomeTransaction.slice(0, 5)?.map((data, id) => (
+                <div
+                  key={id}
+                  className="flex items-center justify-between rounded-lg mt-2 hover:bg-zinc-100 transition-all duration-150 px-2 py-4"
+                >
+                  <div className="flex gap-4">
+                    <div className="rounded ">
+                      <img
+                        className="w-10 "
+                        src="https://res.cloudinary.com/dbpleky0i/image/upload/v1752038225/image_ji8lre.png"
+                        alt=""
+                      />
+                    </div>
+                    <div className="flex flex-col">
+                      <h1 className="text-lg font-medium">{data.catagory}</h1>
+                      <h3 className="text-xs text-gray-400 font-medium">
+                        {data.date}
+                      </h3>
+                    </div>
+                  </div>
+                  <span className="px-2 py-1 bg-green-200 rounded-lg text-emerald-800 font-semibold">
+                    ₹{data.amount}
+                  </span>
                 </div>
-                <div className="flex flex-col">
-                  <h1 className="text-lg font-medium">{data.catagory}</h1>
-                  <h3 className="text-xs text-gray-400 font-medium">
-                    {data.date}
-                  </h3>
-                </div>
-              </div>
-              <span className="px-2 py-1 bg-green-200 rounded-lg text-emerald-800 font-semibold">
-                ₹{data.amount}
-              </span>
-            </div>
-          ))}</>}
+              ))}
+            </>
+          )}
         </div>
       </div>
 
+      <div className="flex justify-between">
         <h1 className="text-lg font-semibold">Recent Transaction</h1>
+        <div className="flex gap-2">
+          <button
+            className="px-3 py-1 rounded bg-zinc-200"
+            title="Export Excel"
+            onClick={() => handleDownloadExcel()}
+          >
+            <i className="ri-file-excel-line"></i>
+          </button>
+          <button
+            className="px-3 py-1 rounded bg-zinc-200"
+            title="Export PDF"
+            onClick={() => handleDownloadPDF()}
+          >
+            <i className="ri-file-pdf-2-line"></i>
+          </button>
+        </div>
+      </div>
       <div className="w-full  shadow-lg px-4 py-4 overflow-y-auto ">
         <table className="w-full ">
           <thead>
@@ -335,20 +428,20 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-function TableLoading(){
-  return[...Array(5)].map((_, idx) => (
-      <div
-        key={idx}
-        className="flex items-center justify-between rounded-lg mt-2 px-2 py-4 animate-pulse bg-gray-100"
-      >
-        <div className="flex gap-4">
-          <div className="rounded bg-gray-300 w-10 h-10" />
-          <div className="flex flex-col gap-2">
-            <div className="h-4 w-32 bg-gray-300 rounded" />
-            <div className="h-3 w-20 bg-gray-200 rounded" />
-          </div>
+function TableLoading() {
+  return [...Array(5)].map((_, idx) => (
+    <div
+      key={idx}
+      className="flex items-center justify-between rounded-lg mt-2 px-2 py-4 animate-pulse bg-gray-100"
+    >
+      <div className="flex gap-4">
+        <div className="rounded bg-gray-300 w-10 h-10" />
+        <div className="flex flex-col gap-2">
+          <div className="h-4 w-32 bg-gray-300 rounded" />
+          <div className="h-3 w-20 bg-gray-200 rounded" />
         </div>
-        <div className="h-6 w-16 bg-gray-300 rounded" />
       </div>
-    ))
+      <div className="h-6 w-16 bg-gray-300 rounded" />
+    </div>
+  ));
 }

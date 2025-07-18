@@ -9,6 +9,12 @@
 .active{
     @apply text-white
 }
+.active .navm{
+    @apply border-t p-0
+}
+.active .ic{
+    @apply scale-75
+}
 .active h1{
     @apply scale-110 translate-x-3 font-semibold
 }

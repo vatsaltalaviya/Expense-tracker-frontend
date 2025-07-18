@@ -18,7 +18,7 @@ const Sidebar = ({sidemenu ,logOut}) => {
 
       {/* ================== main memu =========================== */}
       <div className="w-full space-y-3 px-2 py-3">
-        {sidemenu.map((item,i)=>(<NavLink onClick={item.onclick} className='text-white/45 ' key={i} to={item.navigate}><div className="flex nav transition-all duration-300 gap-2 py-2 items-center">
+        {sidemenu.map((item,i)=>(<NavLink onClick={item.onclick} className='text-white/55 ' key={i} to={item.navigate}><div className="flex nav transition-all duration-300 gap-2 py-2 items-center">
           <i  className={`${item.icon} text-xl`}></i>
           <h1 className="transition-transform duration-150">{item.name}</h1>
         </div></NavLink>))}
