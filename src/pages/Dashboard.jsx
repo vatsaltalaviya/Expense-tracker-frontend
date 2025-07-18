@@ -234,7 +234,7 @@ const Dashboard = () => {
         <div className="w-full xl:w-1/2 shadow-lg shadow-zinc-300 rounded-xl py-2 px-2">
           <div className="flex w-full justify-between py-4">
             <h1 className="text-lg font-semibold">Income</h1>
-            <button className="text-xs px-2 py-1 rounded font-medium bg-zinc-200">
+            <button onClick={()=>navigate('/income')} className="text-xs px-2 py-1 rounded font-medium bg-zinc-200">
               See All <i className="ri-arrow-right-line"></i>
             </button>
           </div>

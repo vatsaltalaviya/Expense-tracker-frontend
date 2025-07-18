@@ -1,9 +1,8 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
 
-const Sidebar = ({sidemenu}) => {
+const Sidebar = ({sidemenu ,logOut}) => {
  
-
   return (
     <aside className="px-2 text-white py-1 w-full h-screen relative bg-zinc-950">
       <div className="flex items-center gap-2 px-2 py-3">
@@ -23,6 +22,10 @@ const Sidebar = ({sidemenu}) => {
           <i  className={`${item.icon} text-xl`}></i>
           <h1 className="transition-transform duration-150">{item.name}</h1>
         </div></NavLink>))}
+        <button onClick={()=>logOut()} className="flex nav transition-all text-white/45 duration-300 gap-2 py-1.5 hover:px-4 rounded my-4 hover:bg-white hover:text-black items-center">
+          <i  className={`ri-shut-down-line text-xl`}></i>
+          <h1 className="transition-transform duration-150">Logout</h1>
+        </button>
       </div>
     </aside>
   );

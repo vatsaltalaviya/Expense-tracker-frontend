@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import Sidebar from "./components/Sidebar";
 import Navbar from "./components/Navbar";
 import Dashboard from "./pages/Dashboard";
-import { NavLink, Route, Routes, useLocation } from "react-router-dom";
+import { NavLink, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Income from "./pages/Income";
 import Expense from "./pages/Expense";
 import Login from "./pages/Login";
@@ -11,6 +11,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
   const location = useLocation();
+  const [showLogoutAlert, setshowLogoutAlert] = useState(false)
+  const navigate = useNavigate();
   const isLoginPage =
     location.pathname === "/" || location.pathname === "/signin";
   const sidemenu = [
@@ -29,18 +31,15 @@ const App = () => {
       name: "Expense",
       navigate: "/expense",
     },
-    {
-      icon: "ri-shut-down-line",
-      name: "Logout",
-      navigate: "/",
-      onclick:()=>logOut()
-    },
+    
   ];
 
   const logOut = () => {
     localStorage.removeItem("userid");
     sessionStorage.removeItem("AccessToken")
     sessionStorage.removeItem("refreshToken")
+    setshowLogoutAlert(false)
+    navigate('/')
   }
 
   return (
@@ -48,7 +47,7 @@ const App = () => {
       {/* Sidebar - hidden on login and hidden on small screens */}
       {!isLoginPage && (
         <aside className="hidden md:block fixed top-0 left-0 h-screen bg-gray-800 z-10">
-          <Sidebar sidemenu={sidemenu} logOut={()=>logOut()} />
+          <Sidebar sidemenu={sidemenu} logOut={()=>setshowLogoutAlert(true)} />
         </aside>
       )}
 
@@ -115,6 +114,8 @@ const App = () => {
               }
             />
           </Routes>
+
+          {showLogoutAlert && <LogoutUser onYes={()=>logOut()} onCancel={()=>setshowLogoutAlert(false)} />}
         </main>
       </div>
     </div>
@@ -122,3 +123,14 @@ const App = () => {
 };
 
 export default App;
+const LogoutUser = ({onYes,onCancel})=>{
+  return <div className="w-full flex items-center justify-center h-screen bg-black/5 fixed top-0 left-0">
+  <div className=" px-2 py-2 text-black bg-white rounded-lg w-82">
+    <h1 className="text-lg font-semibold text-center">Are you sure you want to Logout?</h1>
+    <div className="flex justify-center w-full gap-x-2">
+      <button onClick={()=>onYes()} className="bg-emerald-500 w-full rounded px-2 py-1 text-lg font-medium text-white">Yes</button>
+      <button onClick={()=>onCancel()} className="bg-red-500 w-full rounded px-2 py-1 text-lg font-medium text-white">Cancel</button>
+    </div>
+  </div>
+  </div>
+}
