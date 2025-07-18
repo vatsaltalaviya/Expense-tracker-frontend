@@ -63,6 +63,10 @@ const App = () => {
                 </div>
               </NavLink>
             ))}
+            <button onClick={()=>setshowLogoutAlert(true)} className="flex nav transition-all text-white/45 duration-300 gap-2 rounded hover:bg-white hover:text-black items-center">
+          <i  className={`ri-shut-down-line text-xl`}></i>
+          
+        </button>
           </div>
         </div>
       </div>
