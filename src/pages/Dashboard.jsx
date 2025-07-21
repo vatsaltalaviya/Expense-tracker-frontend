@@ -1,6 +1,9 @@
 import { BarChart, pieArcLabelClasses, PieChart } from "@mui/x-charts";
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { FaMoneyBillWave } from "react-icons/fa";
+import { MdSavings } from "react-icons/md";
+import { FaMoneyBillTrendUp } from "react-icons/fa6";
 import {
   getIncomeExpenseTrand,
   getRecentTrasaction,
@@ -10,7 +13,7 @@ import { getIncome } from "../slice/income.slice";
 import { getExpense } from "../slice/expense.slice";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { animate , motion } from "framer-motion";
+import { animate, motion } from "framer-motion";
 
 const chartSetting = {
   yAxis: [
@@ -25,20 +28,20 @@ const chartSetting = {
 const Dashboard = () => {
   const id = useMemo(() => localStorage.getItem("userid"), []);
 
-  const [totalincome , settotalincome] = useState(0)
-  const [totalexpense, settotalexpense] = useState(0)
-  const [totalbal, settotalbal] = useState(0)
-
+  const [totalincome, settotalincome] = useState(0);
+  const [totalexpense, settotalexpense] = useState(0);
+  const [totalbal, settotalbal] = useState(0);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { summary, recentTransaction, summaryLoading, chartTrand } =
-    useSelector((state) => state.summary);
+  const { summary, recentTransaction, chartTrand } = useSelector(
+    (state) => state.summary
+  );
   const { income, incomeLoading } = useSelector((state) => state.income);
   const { expense, expenseLoading } = useSelector((state) => state.expense);
   useEffect(() => {
     dispatch(getSummary());
-    dispatch(getRecentTrasaction());
+    dispatch(getRecentTrasaction(1));
     dispatch(getIncomeExpenseTrand());
   }, []);
   useEffect(() => {
@@ -46,43 +49,37 @@ const Dashboard = () => {
     dispatch(getExpense(id));
   }, [dispatch, id]);
 
+  const [animated, setAnimated] = useState(false);
 
+  useEffect(() => {
+    if (
+      summary?.totalIncome > 0 ||
+      summary?.totalExpense > 0 ||
+      summary?.balance > 0
+    ) {
+      if (!animated) {
+        setAnimated(true);
 
- const [animated, setAnimated] = useState(false);
+        animate(0, summary.totalIncome || 0, {
+          duration: 2,
+          ease: "easeOut",
+          onUpdate: (latest) => settotalincome(Math.round(latest)),
+        });
 
-useEffect(() => {
-  if (
-    summary?.totalIncome > 0 ||
-    summary?.totalExpense > 0 ||
-    summary?.balance > 0
-  ) {
-    if (!animated) {
-      setAnimated(true);
+        animate(0, summary.totalExpense || 0, {
+          duration: 2,
+          ease: "easeOut",
+          onUpdate: (latest) => settotalexpense(Math.round(latest)),
+        });
 
-      animate(0, summary.totalIncome || 0, {
-        duration: 2,
-        ease: "easeOut",
-        onUpdate: (latest) => settotalincome(Math.round(latest)),
-      });
-
-      animate(0, summary.totalExpense || 0, {
-        duration: 2,
-        ease: "easeOut",
-        onUpdate: (latest) => settotalexpense(Math.round(latest)),
-      });
-
-      animate(0, summary.balance || 0, {
-        duration: 2,
-        ease: "easeOut",
-        onUpdate: (latest) => settotalbal(Math.round(latest)),
-      });
+        animate(0, summary.balance || 0, {
+          duration: 2,
+          ease: "easeOut",
+          onUpdate: (latest) => settotalbal(Math.round(latest)),
+        });
+      }
     }
-  }
-}, [summary, animated]);
-
-
-
-
+  }, [summary, animated]);
 
   const RecentTransaction = useMemo(() => {
     return recentTransaction?.map((d) => {
@@ -119,6 +116,9 @@ useEffect(() => {
         date: formattedDate,
         catagory: d.category,
         id: d._id,
+        bgColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(
+          Math.random() * 255
+        )}, ${Math.floor(Math.random() * 255)})`
       };
     });
   }, [income]);
@@ -138,6 +138,9 @@ useEffect(() => {
         date: formattedDate,
         catagory: d.category,
         id: d._id,
+        bgColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(
+          Math.random() * 255
+        )}, ${Math.floor(Math.random() * 255)})`
       };
     });
   }, [expense]);
@@ -179,91 +182,84 @@ useEffect(() => {
     chartTrand?.expense
   );
 
-    const handleDownloadExcel =async()=>{
-        
-        try {
-          const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/export/transaction/${id}`, {
-            responseType: "blob", // 👈 Important to receive file as Blob
-          })
-         
-          
-          if(res.status == 200){
-             // Create a blob from response
-          const blob = new Blob([res.data], {
-            type:
-              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-          });
-    
-          // Create a download link
-          const link = document.createElement("a");
-          link.href = window.URL.createObjectURL(blob);
-          link.download = "transaction-data.xlsx"; // Set filename
-          link.click(); // Trigger download
-    
-          // Cleanup
-          window.URL.revokeObjectURL(link.href);
-          }
-        } catch (error) {
-          console.error(error);
-          
+  const handleDownloadExcel = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/export/transaction/${id}`,
+        {
+          responseType: "blob", // 👈 Important to receive file as Blob
         }
+      );
+
+      if (res.status == 200) {
+        // Create a blob from response
+        const blob = new Blob([res.data], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+
+        // Create a download link
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        link.download = "transaction-data.xlsx"; // Set filename
+        link.click(); // Trigger download
+
+        // Cleanup
+        window.URL.revokeObjectURL(link.href);
       }
-      const handleDownloadPDF =async()=>{
-        try {
-          const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/export/transaction/pdf/${id}`, {
-            responseType: "blob", // 👈 Important to receive file as Blob
-          })
-    
-          
-          if(res.status == 200){
-             // Create a blob from response
-          const blob = new Blob([res.data], {
-            type:
-              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-          });
-    
-          // Create a download link
-          const link = document.createElement("a");
-          link.href = window.URL.createObjectURL(blob);
-          link.download = "Transaction-data.pdf"; // Set filename
-          link.click(); // Trigger download
-    
-          // Cleanup
-          window.URL.revokeObjectURL(link.href);
-          }
-        } catch (error) {
-          console.error(error);
-          
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const handleDownloadPDF = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/export/transaction/pdf/${id}`,
+        {
+          responseType: "blob", // 👈 Important to receive file as Blob
         }
+      );
+
+      if (res.status == 200) {
+        // Create a blob from response
+        const blob = new Blob([res.data], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
+
+        // Create a download link
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        link.download = "Transaction-data.pdf"; // Set filename
+        link.click(); // Trigger download
+
+        // Cleanup
+        window.URL.revokeObjectURL(link.href);
       }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
-    <div className="py-2">
+    <div className="py-2 ">
       <div className="w-full flex flex-col xl:flex-row gap-4 items-center py-4">
-        <div className="w-full p-6 flex justify-between bg-violet-300 shadow-lg shadow-violet-400 rounded">
+        <div className="w-full p-6 flex justify-between bg-primary text-white  rounded">
           <div className="shrink-0">
             <h1 className="text-2xl font-semibold">₹{totalincome}</h1>
             <h1 className="text-xs font-semibold">Total Income</h1>
           </div>
           <div className="w-full flex justify-end items-center">
-            <img
-              className="w-10 "
-              src="https://res.cloudinary.com/dbpleky0i/image/upload/v1752038225/image_ji8lre.png"
-              alt=""
-            />
+            <MdSavings className="text-3xl" />
           </div>
         </div>
-        <div className="w-full p-6 flex justify-between bg-emerald-100 shadow-lg shadow-emerald-200 rounded">
+        <div className="w-full p-6 flex justify-between bg-secondary text-white rounded">
           <div className="shrink-0">
-            <motion.h1 className="text-2xl font-semibold">₹{totalexpense}</motion.h1>
+            <motion.h1 className="text-2xl font-semibold">
+              ₹{totalexpense}
+            </motion.h1>
             <h1 className="text-xs font-semibold">Total Expense</h1>
           </div>
           <div className="w-full flex justify-end items-center">
-            <img
-              className="w-10 "
-              src="https://res.cloudinary.com/dbpleky0i/image/upload/v1752038225/savings_10618007_eshoub.png"
-              alt=""
-            />
+            <FaMoneyBillTrendUp className="text-3xl" />
           </div>
         </div>
         <div className="w-full p-6 flex justify-between bg-white  shadow-lg  rounded">
@@ -272,11 +268,7 @@ useEffect(() => {
             <h1 className="text-xs font-semibold">Total Balance</h1>
           </div>
           <div className="w-full flex justify-end items-center">
-            <img
-              className="w-10 "
-              src="https://res.cloudinary.com/dbpleky0i/image/upload/v1752038225/savings_10618007_eshoub.png"
-              alt=""
-            />
+            <FaMoneyBillWave className="text-3xl" />
           </div>
         </div>
       </div>
@@ -288,11 +280,12 @@ useEffect(() => {
             dataset={monthlyDataset}
             xAxis={[{ dataKey: "month" }]}
             series={[
-              { dataKey: "income", label: "Income", color: "#34d399" },
-              { dataKey: "expense", label: "Expense", color: "#f87171" },
+              { dataKey: "income", label: "Income", color: "#8033fb" },
+              { dataKey: "expense", label: "Expense", color: "#fe6b3a" },
             ]}
             height={350}
             {...chartSetting}
+            borderRadius={32}
           />
         </div>
       </div>
@@ -320,11 +313,14 @@ useEffect(() => {
                 >
                   <div className="flex gap-4">
                     <div className="rounded ">
-                      <img
-                        className="w-10 "
-                        src="https://res.cloudinary.com/dbpleky0i/image/upload/v1752038225/image_ji8lre.png"
-                        alt=""
-                      />
+                      <div
+                        style={{
+                          backgroundColor: data.bgColor,
+                        }}
+                        className={`rounded-full w-12 h-12 flex items-center justify-center text-white uppercase font-bold text-3xl text-center `}
+                      >
+                        {data.catagory[0]}
+                      </div>
                     </div>
                     <div className="flex flex-col">
                       <h1 className="text-lg font-medium">{data.catagory}</h1>
@@ -363,11 +359,14 @@ useEffect(() => {
                 >
                   <div className="flex gap-4">
                     <div className="rounded ">
-                      <img
-                        className="w-10 "
-                        src="https://res.cloudinary.com/dbpleky0i/image/upload/v1752038225/image_ji8lre.png"
-                        alt=""
-                      />
+                      <div
+                        style={{
+                          backgroundColor: data.bgColor,
+                        }}
+                        className={`rounded-full w-12 h-12 flex items-center justify-center text-white uppercase font-bold text-3xl text-center `}
+                      >
+                        {data.catagory[0]}
+                      </div>
                     </div>
                     <div className="flex flex-col">
                       <h1 className="text-lg font-medium">{data.catagory}</h1>
@@ -404,11 +403,11 @@ useEffect(() => {
             <i className="ri-file-pdf-2-line"></i>
           </button>
           <button
-              onClick={() => navigate("/alltransactions")}
-              className="text-xs px-2 py-1 rounded font-medium bg-zinc-200"
-            >
-              See All <i className="ri-arrow-right-line"></i>
-            </button>
+            onClick={() => navigate("/alltransactions")}
+            className="text-xs px-2 py-1 rounded font-medium bg-zinc-200"
+          >
+            See All <i className="ri-arrow-right-line"></i>
+          </button>
         </div>
       </div>
       <div className="w-full  shadow-lg px-4 py-4 overflow-y-auto ">
@@ -433,7 +432,7 @@ useEffect(() => {
             </tr>
           </thead>
           <tbody>
-            {RecentTransaction?.slice(0, 10)?.map((data, i) => (
+            {RecentTransaction?.map((data, i) => (
               <tr key={i} className="hover:bg-gray-100">
                 <td
                   className={`text-sm px-2 py-3 font-semibold border-t text-blue-500 border-t-gray-500/20`}

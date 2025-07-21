@@ -1,17 +1,19 @@
 @import "tailwindcss";
 
 @theme{
-    --color-primary:#711971;
+    --color-primary:#8033fb;
+    --color-secondary:#fe6b3a;
 }
 *{
     font-family: "Montserrat", sans-serif;
 }
-.active{
-    @apply text-white
+.active .nav{
+    @apply bg-primary text-white rounded-lg px-2
 }
 .active .navm{
     @apply border-t p-0
 }
+
 .active .ic{
     @apply scale-75
 }

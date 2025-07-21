@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import loginimg from '../assets/login.png'
+import logo from '../assets/logo.jpg'
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { LoginUser } from "../slice/user.slice";
@@ -44,14 +45,14 @@ const Login = () => {
           onSubmit={handleSubmit}
           className="xl:px-5 w-full xl:w-xl shrink-0 py-1 mt-2"
         >
-          <div className="flex flex-col items-center gap-2 mb-4">
-            <img
-              className="w-16 object-contain"
-              src="https://res.cloudinary.com/dbpleky0i/image/upload/v1751972868/logoexpense_e5emuj.png"
-              alt=""
-            />
-            <h1 className="font-semibold text-xl">Welcome Back</h1>
-          </div>
+           <div className="flex flex-col items-center justify-center gap-2 mb-4">
+                       <img
+                         className="w-18 rounded-2xl object-contain"
+                         src="https://videos.openai.com/vg-assets/assets%2Ftask_01k0p7exqgf56vgy73fw9nk4jp%2F1753092757_img_0.webp?st=2025-07-21T08%3A27%3A58Z&se=2025-07-27T09%3A27%3A58Z&sks=b&skt=2025-07-21T08%3A27%3A58Z&ske=2025-07-27T09%3A27%3A58Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=aa5ddad1-c91a-4f0a-9aca-e20682cc8969&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=dZAyN%2FKIy0Xu8Eyb84y7yCaRpfk0W3gzY9Iza6ddPIY%3D&az=oaivgprodscus"
+                         alt=""
+                       />
+                       <h1 className="font-semibold text-xl">Welcome Back</h1>
+                     </div>
           {/* Email Field */}
           <div className="w-full py-2">
             <input
