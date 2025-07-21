@@ -403,6 +403,12 @@ useEffect(() => {
           >
             <i className="ri-file-pdf-2-line"></i>
           </button>
+          <button
+              onClick={() => navigate("/alltransactions")}
+              className="text-xs px-2 py-1 rounded font-medium bg-zinc-200"
+            >
+              See All <i className="ri-arrow-right-line"></i>
+            </button>
         </div>
       </div>
       <div className="w-full  shadow-lg px-4 py-4 overflow-y-auto ">

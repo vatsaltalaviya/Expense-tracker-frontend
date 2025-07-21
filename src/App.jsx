@@ -14,6 +14,7 @@ import Expense from "./pages/Expense";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AllTransaction from "./pages/AllTransaction";
 
 const App = () => {
   const location = useLocation();
@@ -127,6 +128,14 @@ const App = () => {
               element={
                 <ProtectedRoute>
                   <Expense />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/alltransactions"
+              element={
+                <ProtectedRoute>
+                  <AllTransaction />
                 </ProtectedRoute>
               }
             />
