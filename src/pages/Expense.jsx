@@ -157,7 +157,7 @@ const Expense = () => {
 
   return (
     <div className="w-full">
-      <div className="w-full shadow-lg rounded-lg px-2 py-2">
+      <div className="w-full bg-white shadow-lg rounded-lg px-2 py-2">
         <div className="flex justify-between">
           <div>
             <h1 className="text-lg font-medium">Expense Overview</h1>
@@ -184,7 +184,7 @@ const Expense = () => {
           />
         )}
       </div>
-      <div className="w-full max-h-[50vh] mt-5  shadow-lg px-4 py-4 overflow-x-auto noscrollbar">
+      <div className="w-full max-h-[50vh] mt-5 bg-white rounded-lg shadow-lg px-4 py-4 overflow-x-auto noscrollbar">
         <div className="flex py-1 justify-between">
          <h1 className="text-lg font-semibold">Expense</h1>
        <div className="flex gap-2">

@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import loginimg from '../assets/login.png'
-import logo from '../assets/logo.jpg'
+import { auth, provider, signInWithPopup } from "../slice/firebase";
+import loginimg from "../assets/login.png";
+import logo from "../assets/logo.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { LoginUser } from "../slice/user.slice";
 import { BeatLoader } from "react-spinners";
-
+import { FaGoogle } from "react-icons/fa";
+import axios from "axios";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,23 +15,51 @@ const Login = () => {
   const [pass, setpass] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {loading , error , user} = useSelector(state=>state.user)
-  
-  const handleSubmit =async(e)=>{
+  const { loading, error, user } = useSelector((state) => state.user);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const UserData = {
       email,
-      password:pass
-    }
+      password: pass,
+    };
     try {
-     await dispatch(LoginUser(UserData)).then((e)=>navigate('/dashboard'));
-      
+      await dispatch(LoginUser(UserData)).then((e) => navigate("/dashboard"));
     } catch (error) {
       console.error(error);
-      
     }
-  }
+  };
 
+  const loginWithGoogle = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // Send user to backend
+      const res = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/user/auth/google`,
+        {
+          name: user.displayName,
+          email: user.email,
+          photo: user.photoURL,
+          uid: user.uid,
+        },
+        {
+          withCredentials: true, // ✅ Send cookies (for JWT)
+        }
+      );
+      const data = res.data;
+      if (data.success) {
+        sessionStorage.setItem("refreshToken", data.Refreshtoken);
+        sessionStorage.setItem("AccessToken", data.Accesstoken);
+        localStorage.setItem("username", data.user.username);
+        localStorage.setItem("userid", data.user.id);
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      console.error("Google login error:", error);
+    }
+  };
 
   return (
     <div className="lg:flex justify-center items-center h-screen w-full text-black bg-white lg:bg-gray-100">
@@ -37,7 +67,10 @@ const Login = () => {
         <div className="w-xs xl:w-sm xl:block hidden shrink-0">
           <img
             className="w-full object-cover shadow-2xl rounded-3xl"
-            src={loginimg ||"https://videos.openai.com/vg-assets/assets%2Ftask_01jzmt1ebme0etp92emn4ngxyg%2F1751971383_img_0.webp?st=2025-07-09T08%3A14%3A57Z&se=2025-07-15T09%3A14%3A57Z&sks=b&skt=2025-07-09T08%3A14%3A57Z&ske=2025-07-15T09%3A14%3A57Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=0Z14n9J7a0t4K8PHQoiZlf4%2BKLQHTqHzo%2FNkBvcltpY%3D&az=oaivgprodscus"}
+            src={
+              loginimg ||
+              "https://videos.openai.com/vg-assets/assets%2Ftask_01jzmt1ebme0etp92emn4ngxyg%2F1751971383_img_0.webp?st=2025-07-09T08%3A14%3A57Z&se=2025-07-15T09%3A14%3A57Z&sks=b&skt=2025-07-09T08%3A14%3A57Z&ske=2025-07-15T09%3A14%3A57Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=3d249c53-07fa-4ba4-9b65-0bf8eb4ea46a&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=0Z14n9J7a0t4K8PHQoiZlf4%2BKLQHTqHzo%2FNkBvcltpY%3D&az=oaivgprodscus"
+            }
             alt=""
           />
         </div>
@@ -45,14 +78,14 @@ const Login = () => {
           onSubmit={handleSubmit}
           className="xl:px-5 w-full xl:w-xl shrink-0 py-1 mt-2"
         >
-           <div className="flex flex-col items-center justify-center gap-2 mb-4">
-                       <img
-                         className="w-18 rounded-2xl object-contain"
-                         src="https://videos.openai.com/vg-assets/assets%2Ftask_01k0p7exqgf56vgy73fw9nk4jp%2F1753092757_img_0.webp?st=2025-07-21T08%3A27%3A58Z&se=2025-07-27T09%3A27%3A58Z&sks=b&skt=2025-07-21T08%3A27%3A58Z&ske=2025-07-27T09%3A27%3A58Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=aa5ddad1-c91a-4f0a-9aca-e20682cc8969&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=dZAyN%2FKIy0Xu8Eyb84y7yCaRpfk0W3gzY9Iza6ddPIY%3D&az=oaivgprodscus"
-                         alt=""
-                       />
-                       <h1 className="font-semibold text-xl">Welcome Back</h1>
-                     </div>
+          <div className="flex flex-col items-center justify-center gap-2 mb-4">
+            <img
+              className="w-18 rounded-2xl object-contain"
+              src="https://videos.openai.com/vg-assets/assets%2Ftask_01k0p7exqgf56vgy73fw9nk4jp%2F1753092757_img_0.webp?st=2025-07-21T08%3A27%3A58Z&se=2025-07-27T09%3A27%3A58Z&sks=b&skt=2025-07-21T08%3A27%3A58Z&ske=2025-07-27T09%3A27%3A58Z&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skoid=aa5ddad1-c91a-4f0a-9aca-e20682cc8969&skv=2019-02-02&sv=2018-11-09&sr=b&sp=r&spr=https%2Chttp&sig=dZAyN%2FKIy0Xu8Eyb84y7yCaRpfk0W3gzY9Iza6ddPIY%3D&az=oaivgprodscus"
+              alt=""
+            />
+            <h1 className="font-semibold text-xl">Welcome Back</h1>
+          </div>
           {/* Email Field */}
           <div className="w-full py-2">
             <input
@@ -96,7 +129,17 @@ const Login = () => {
               type="submit"
               className="w-full border text-white bg-primary transition-all duration-300 rounded-lg px-3 py-3 font-medium text-lg md:text-2xl"
             >
-              {loading?<BeatLoader size={6} color="#ffffff" />: "Login"}
+              {loading ? <BeatLoader size={6} color="#ffffff" /> : "Login"}
+            </button>
+          </div>
+
+          <div className="py-2 flex justify-center w-full">
+            <button
+              type="button"
+              onClick={() => loginWithGoogle()}
+              className=" border text-white bg-zinc-400 hover:bg-zinc-600 flex transition-all items-center justify-center gap-x-2 duration-50 rounded-lg px-3 py-0.5 font-medium text-lg "
+            >
+              <FaGoogle className="text-lg " /> Sign in with Google
             </button>
           </div>
 

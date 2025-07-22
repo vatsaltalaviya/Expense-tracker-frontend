@@ -11,13 +11,14 @@ const ProtectedRoute = ({ children }) => {
   const navigate = useNavigate();
   const token = sessionStorage.getItem("AccessToken");
 
+
+  
   useEffect(() => {
     const checkAuth = async () => {
       if (!token) {
         navigate("/"); // No token at all
         return;
       }
-
       try {
         // Call the profile API to verify token and get user
         const res = await axiosInstance.get("/user/profile");

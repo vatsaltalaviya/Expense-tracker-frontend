@@ -273,9 +273,9 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="w-full flex gap-2 items-center py-4">
+      <div className="w-full flex gap-2 bg-white rounded items-center py-4">
         <div className="w-full">
-          <h1 className="text-lg font-semibold">Expense</h1>
+          <h1 className="text-lg px-2 font-semibold">Expense</h1>
           <BarChart
             dataset={monthlyDataset}
             xAxis={[{ dataKey: "month" }]}
@@ -290,8 +290,8 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="w-full flex flex-col xl:flex-row gap-4 items-center py-4">
-        <div className="w-full xl:w-1/2 shadow-lg shadow-zinc-300 rounded-xl py-2 px-2">
+      <div className="w-full flex flex-col  xl:flex-row gap-4 items-center py-4">
+        <div className="w-full xl:w-1/2 bg-white shadow-lg shadow-zinc-300 rounded-xl py-2 px-2">
           <div className="flex w-full justify-between py-4">
             <h1 className="text-lg font-semibold">Expenses</h1>
             <button
@@ -337,7 +337,7 @@ const Dashboard = () => {
             </>
           )}
         </div>
-        <div className="w-full xl:w-1/2 shadow-lg shadow-zinc-300 rounded-xl py-2 px-2">
+        <div className="w-full xl:w-1/2 shadow-lg bg-white shadow-zinc-300 rounded-xl py-2 px-2">
           <div className="flex w-full justify-between py-4">
             <h1 className="text-lg font-semibold">Income</h1>
             <button
@@ -410,7 +410,7 @@ const Dashboard = () => {
           </button>
         </div>
       </div>
-      <div className="w-full  shadow-lg px-4 py-4 overflow-y-auto ">
+      <div className="w-full bg-white rounded-lg shadow-lg px-4 py-4 overflow-y-auto ">
         <table className="w-full ">
           <thead>
             <tr>
