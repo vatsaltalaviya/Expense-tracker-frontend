@@ -31,6 +31,7 @@ const Dashboard = () => {
   const [totalincome, settotalincome] = useState(0);
   const [totalexpense, settotalexpense] = useState(0);
   const [totalbal, settotalbal] = useState(0);
+  const [mode, setmode] = useState('yearly');
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -118,7 +119,7 @@ const Dashboard = () => {
         id: d._id,
         bgColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(
           Math.random() * 255
-        )}, ${Math.floor(Math.random() * 255)})`
+        )}, ${Math.floor(Math.random() * 255)})`,
       };
     });
   }, [income]);
@@ -140,7 +141,7 @@ const Dashboard = () => {
         id: d._id,
         bgColor: `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(
           Math.random() * 255
-        )}, ${Math.floor(Math.random() * 255)})`
+        )}, ${Math.floor(Math.random() * 255)})`,
       };
     });
   }, [expense]);
@@ -160,27 +161,15 @@ const Dashboard = () => {
     "Dec",
   ];
 
-  const formatChartData = (incomeData, expenseData) => {
-    const monthlyData = months.map((month, index) => {
-      const monthKey = `2025-${String(index + 1).padStart(2, "0")}`;
-
-      const incomeItem = incomeData?.find((i) => i._id === monthKey);
-      const expenseItem = expenseData?.find((e) => e._id === monthKey);
-
-      return {
-        month,
-        income: incomeItem?.totalIncome || 0,
-        expense: expenseItem?.totalExpense || 0,
-      };
-    });
-
-    return monthlyData;
+  const formatChartData = (data) => {
+    return data?.map(({ name, income, expense }) => ({
+      month: name,
+      income,
+      expense,
+    }));
   };
 
-  const monthlyDataset = formatChartData(
-    chartTrand?.income,
-    chartTrand?.expense
-  );
+  const monthlyDataset = formatChartData(chartTrand);
 
   const handleDownloadExcel = async () => {
     try {
@@ -238,6 +227,7 @@ const Dashboard = () => {
       console.error(error);
     }
   };
+console.log(mode);
 
   return (
     <div className="py-2 ">
@@ -275,7 +265,13 @@ const Dashboard = () => {
 
       <div className="w-full flex gap-2 bg-white rounded items-center py-4">
         <div className="w-full">
-          <h1 className="text-lg px-2 font-semibold">Expense</h1>
+          <div className="flex w-full justify-between px-2">
+            <h1 className="text-lg px-2 font-semibold">Expense</h1>
+            <select value={mode} onChange={(e)=>setmode(e.target.value)} className="px-4 py-2 rounded-lg  bg-white text-gray-700 focus:ring-1 ">
+              <option value="yearly">Year</option>
+              <option value="monthly">Month</option>
+            </select>
+          </div>
           <BarChart
             dataset={monthlyDataset}
             xAxis={[{ dataKey: "month" }]}

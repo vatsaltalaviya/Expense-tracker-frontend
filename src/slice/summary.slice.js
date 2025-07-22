@@ -31,7 +31,7 @@ export const getIncomeExpenseTrand = createAsyncThunk("getIncomeExpenseTrand", a
         const res = await axiosInstance.get(`charts/trends`)
         const data = res.data
         if (data.success) {
-            return { income: data.incomeTrend, expense: data.expenseTrend }
+            return data.trends
         }
     } catch (error) {
         const message = error?.response?.data?.message || error.message || "Something went wrong";

@@ -18,6 +18,7 @@ const Income = () => {
   const [paymentMethod, setpaymentMethod] = useState("");
   const [source, setsource] = useState("");
   const [desc, setdesc] = useState("");
+  const [mode, setmode] = useState("yearly");
 
   const dispatch = useDispatch();
   const { income, incomeTrend, trendLoading, incomeLoading, AddincomeLoading } =
@@ -25,8 +26,14 @@ const Income = () => {
   const id = localStorage.getItem("userid");
   useEffect(() => {
     dispatch(getIncome(id));
-    dispatch(getIncomeTrend());
+ 
   }, []);
+  useEffect(() => {
+   
+    dispatch(getIncomeTrend(mode));
+  }, [mode]);
+
+  console.log(incomeTrend);
 
   const IncomeTransaction = useMemo(() => {
     return income?.map((d) => {
@@ -48,10 +55,12 @@ const Income = () => {
     });
   }, [income]);
   const IncomeTrend = useMemo(() => {
-    return incomeTrend?.map((d) => d.totalIncome);
+    return incomeTrend
+      ?.filter((d) => d.income !== 0) // only keep items with income > 0
+      .map((d) => d.income);
   }, [incomeTrend]);
   const Incomelabel = useMemo(() => {
-    return incomeTrend?.map((d) => d._id);
+    return incomeTrend?.filter((d) => d.income !== 0).map((d) => d.name);
   }, [incomeTrend]);
 
   const handlesubmit = async (e) => {
@@ -90,63 +99,62 @@ const Income = () => {
     }
   };
 
-  const handleDownloadExcel =async()=>{
-    
+  const handleDownloadExcel = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/export/income/${id}`, {
-        responseType: "blob", // 👈 Important to receive file as Blob
-      })
-     
-      
-      if(res.status == 200){
-         // Create a blob from response
-      const blob = new Blob([res.data], {
-        type:
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      });
+      const res = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/export/income/${id}`,
+        {
+          responseType: "blob", // 👈 Important to receive file as Blob
+        }
+      );
 
-      // Create a download link
-      const link = document.createElement("a");
-      link.href = window.URL.createObjectURL(blob);
-      link.download = "income-data.xlsx"; // Set filename
-      link.click(); // Trigger download
+      if (res.status == 200) {
+        // Create a blob from response
+        const blob = new Blob([res.data], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
 
-      // Cleanup
-      window.URL.revokeObjectURL(link.href);
+        // Create a download link
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        link.download = "income-data.xlsx"; // Set filename
+        link.click(); // Trigger download
+
+        // Cleanup
+        window.URL.revokeObjectURL(link.href);
       }
     } catch (error) {
       console.error(error);
-      
     }
-  }
-  const handleDownloadPDF =async()=>{
+  };
+  const handleDownloadPDF = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/export/income/pdf/${id}`, {
-        responseType: "blob", // 👈 Important to receive file as Blob
-      })
+      const res = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/export/income/pdf/${id}`,
+        {
+          responseType: "blob", // 👈 Important to receive file as Blob
+        }
+      );
 
-      
-      if(res.status == 200){
-         // Create a blob from response
-      const blob = new Blob([res.data], {
-        type:
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      });
+      if (res.status == 200) {
+        // Create a blob from response
+        const blob = new Blob([res.data], {
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        });
 
-      // Create a download link
-      const link = document.createElement("a");
-      link.href = window.URL.createObjectURL(blob);
-      link.download = "income-data.pdf"; // Set filename
-      link.click(); // Trigger download
+        // Create a download link
+        const link = document.createElement("a");
+        link.href = window.URL.createObjectURL(blob);
+        link.download = "income-data.pdf"; // Set filename
+        link.click(); // Trigger download
 
-      // Cleanup
-      window.URL.revokeObjectURL(link.href);
+        // Cleanup
+        window.URL.revokeObjectURL(link.href);
       }
     } catch (error) {
       console.error(error);
-      
     }
-  }
+  };
 
   return (
     <div className="w-full">
@@ -158,12 +166,23 @@ const Income = () => {
               Track your earning overtime and analyze your income trands
             </h3>
           </div>
-          <button
+         <div className="space-x-3">
+           <select
+            value={mode}
+            onChange={(e) => setmode(e.target.value)}
+            className="px-4 py-2 rounded-lg  bg-white text-gray-700 focus:ring-1 "
+          >
+            <option value="yearly">Year</option>
+            <option value="monthly">Month</option>
+          </select>
+           <button
             onClick={() => setshowAddIncome(true)}
             className="text-primary textolg px-2 py-2 font-medium border bg-zinc-200/20 rounded border-zinc-500/15"
           >
             Add Income
           </button>
+         
+         </div>
         </div>
         {trendLoading ? (
           <BarChartSkeleton />
@@ -182,14 +201,14 @@ const Income = () => {
           <h1 className="text-lg font-semibold">Income</h1>
           <div className="flex gap-2">
             <button
-            onClick={()=>handleDownloadExcel()}
+              onClick={() => handleDownloadExcel()}
               className="px-3 py-1 rounded bg-zinc-200"
               title="Export Excel"
             >
               <i className="ri-file-excel-line"></i>
             </button>
             <button
-            onClick={()=>handleDownloadPDF()}
+              onClick={() => handleDownloadPDF()}
               className="px-3 py-1 rounded bg-zinc-200"
               title="Export PDF"
             >

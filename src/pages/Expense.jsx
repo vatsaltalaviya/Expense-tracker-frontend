@@ -18,6 +18,7 @@ const Expense = () => {
   const [paymentMethod, setpaymentMethod] = useState("");
   const [source, setsource] = useState("");
   const [desc, setdesc] = useState("");
+   const [mode, setmode] = useState('yearly');
 
   const dispatch = useDispatch();
   const {
@@ -31,8 +32,12 @@ const Expense = () => {
   
   useEffect(() => {
     dispatch(getExpense(id));
-    dispatch(getExpenseTrend());
+ 
   }, []);
+  useEffect(() => {
+
+    dispatch(getExpenseTrend(mode));
+  }, [mode]);
 
   const ExpenseTransaction = useMemo(() => {
     return expense?.map((d) => {
@@ -54,10 +59,10 @@ const Expense = () => {
     });
   }, [expense]);
   const ExpenseTrend = useMemo(() => {
-    return expenseTrend?.map((d) => d.totalExpense);
+    return expenseTrend?.filter((d) => d.expense !== 0) .map((d) => d.expense);
   }, [expenseTrend]);
   const Expenselabel = useMemo(() => {
-    return expenseTrend?.map((d) => d._id);
+    return expenseTrend?.filter((d) => d.expense !== 0) .map((d) => d.name);
   }, [expenseTrend]);
 
   const handlesubmit = async (e) => {
@@ -165,12 +170,22 @@ const Expense = () => {
               Track your earning overtime and analyze your expense trands
             </h3>
           </div>
-          <button
+          <div className="space-x-3">
+             <select
+            value={mode}
+            onChange={(e) => setmode(e.target.value)}
+            className="px-4 py-2 rounded-lg  bg-white text-gray-700 focus:ring-1 "
+          >
+            <option value="yearly">Year</option>
+            <option value="monthly">Month</option>
+          </select>
+            <button
             onClick={() => setshowAddExpense(true)}
             className="text-primary textolg px-2 py-2 font-medium border bg-zinc-200/20 rounded border-zinc-500/15"
           >
             Add Expense
           </button>
+          </div>
         </div>
         {trendLoading ? (
           <BarChartSkeleton />

@@ -39,13 +39,13 @@ export const getIncome = createAsyncThunk("getIncome" , async(id,thunkAPI)=>{
     return thunkAPI.rejectWithValue({ message });
     }
 })
-export const getIncomeTrend = createAsyncThunk("getIncomeTrend" , async(_,thunkAPI)=>{
+export const getIncomeTrend = createAsyncThunk("getIncomeTrend" , async(mode,thunkAPI)=>{
     
     try {
-        const res = await axiosInstance.get(`charts/trends`)  
+        const res = await axiosInstance.get(`charts/trends?mode=${mode}`)  
         const data =res.data
         if(data.success){
-            return data.incomeTrend
+            return data.trends
         }
     } catch (error) {
          const message = error?.response?.data?.message || error.message || "Something went wrong";
