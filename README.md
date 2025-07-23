@@ -1,12 +1,33 @@
-# React + Vite
+# 💰 Expense Tracker Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This is the **frontend** for the Expense Tracker web application built using **React.js**. It allows users to track their income and expenses, visualize financial trends, and manage personal budgets. The app communicates with a backend via **RESTful APIs** to fetch and store user data securely.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- 🔐 User authentication (Login/Register)
+- ➕ Add, edit, and delete **Income** & **Expense** entries
+- 📊 Dashboard with charts to visualize income vs. expense trends
+- 📅 Track recent transactions with date and category info
+- 🧮 Summary of total income, expense, and balance
+- 💡 Responsive UI using **Tailwind CSS**
+- 🔄 Real-time data updates using Redux Toolkit
 
-## Expanding the ESLint configuration
+## 🛠️ Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- **Frontend**: React.js, Redux Toolkit, Tailwind CSS, React Router
+- **State Management**: Redux Toolkit
+- **API Communication**: Axios
+- **Charting Library**: @mui/x-charts (BarChart, PieChart)
+- **Authentication**: JWT-based login & register flow
+
+
+
+## 📦 Installation
+
+```bash
+git clone https://github.com/vatsaltalaviya/Expense-tracker-frontend.git
+cd Expense-tracker-frontend
+npm install
+npm run dev
+
+
