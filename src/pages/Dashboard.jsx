@@ -266,7 +266,7 @@ const Dashboard = () => {
       <div className="w-full flex gap-2 bg-white rounded items-center py-4">
         <div className="w-full">
           <div className="flex w-full justify-between px-2">
-            <h1 className="text-lg px-2 font-semibold">Expense</h1>
+            <h1 className="text-lg px-2 font-semibold">Statastics</h1>
             <select value={mode} onChange={(e)=>setmode(e.target.value)} className="px-4 py-2 rounded-lg  bg-white text-gray-700 focus:ring-1 ">
               <option value="yearly">Year</option>
               <option value="monthly">Month</option>
