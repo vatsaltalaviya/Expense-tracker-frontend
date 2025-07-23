@@ -227,7 +227,7 @@ const Dashboard = () => {
       console.error(error);
     }
   };
-console.log(mode);
+
 
   return (
     <div className="py-2 ">
@@ -273,7 +273,7 @@ console.log(mode);
             </select>
           </div>
           <BarChart
-            dataset={monthlyDataset}
+            dataset={monthlyDataset||[]}
             xAxis={[{ dataKey: "month" }]}
             series={[
               { dataKey: "income", label: "Income", color: "#8033fb" },
