@@ -232,7 +232,7 @@ const Dashboard = () => {
   return (
     <div className="py-2 ">
       <div className="w-full flex flex-col xl:flex-row gap-4 items-center py-4">
-        <div className="w-full p-6 flex justify-between bg-primary text-white  rounded">
+        <div onClick={()=>navigate('/income')} className="w-full p-6 flex justify-between bg-primary text-white  rounded">
           <div className="shrink-0">
             <h1 className="text-2xl font-semibold">₹{totalincome}</h1>
             <h1 className="text-xs font-semibold">Total Income</h1>
@@ -241,7 +241,7 @@ const Dashboard = () => {
             <MdSavings className="text-3xl" />
           </div>
         </div>
-        <div className="w-full p-6 flex justify-between bg-secondary text-white rounded">
+        <div onClick={()=>navigate('/expense')} className="w-full p-6 flex justify-between bg-secondary text-white rounded">
           <div className="shrink-0">
             <motion.h1 className="text-2xl font-semibold">
               ₹{totalexpense}

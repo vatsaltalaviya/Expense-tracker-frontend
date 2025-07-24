@@ -19,6 +19,20 @@ const Income = () => {
   const [source, setsource] = useState("");
   const [desc, setdesc] = useState("");
   const [mode, setmode] = useState("yearly");
+  const [bars, setBars] = useState(6); // default to 6
+  
+    useEffect(() => {
+      const handleResize = () => {
+        setBars(window.innerWidth < 640 ? 4 : 6); // sm breakpoint in Tailwind is 640px
+        
+      };
+  
+      handleResize(); // call on mount
+      window.addEventListener("resize", handleResize);
+  
+      return () => window.removeEventListener("resize", handleResize);
+    }, []);
+  
 
   const dispatch = useDispatch();
   const { income, incomeTrend, trendLoading, incomeLoading, AddincomeLoading } =
@@ -33,7 +47,7 @@ const Income = () => {
     dispatch(getIncomeTrend(mode));
   }, [mode]);
 
-  console.log(incomeTrend);
+
 
   const IncomeTransaction = useMemo(() => {
     return income?.map((d) => {
@@ -185,11 +199,11 @@ const Income = () => {
          </div>
         </div>
         {trendLoading ? (
-          <BarChartSkeleton />
+          <BarChartSkeleton bars={bars}/>
         ) : (
           <BarChart
             height={300}
-            series={[{ data: IncomeTrend, label: "Income", id: "pvId" }]}
+            series={[{ data: IncomeTrend, label: "Income", id: "pvId", color:"#8033fb"}]}
             xAxis={[{ data: Incomelabel }]}
             yAxis={[{ width: 50 }]}
             loading={false}
@@ -388,11 +402,11 @@ function TableLoading() {
     </>
   );
 }
-function BarChartSkeleton() {
+function BarChartSkeleton({bars}) {
   return (
     <div className="w-full h-[300px] p-4 animate-pulse bg-gray-100 rounded-xl">
       <div className="h-full flex items-end justify-between space-x-2">
-        {Array.from({ length: 6 }).map((_, i) => (
+        {Array.from({ length: bars}).map((_, i) => (
           <div key={i} className="flex flex-col items-center space-y-1">
             <div
               className="bg-gray-300 rounded-md w-20"

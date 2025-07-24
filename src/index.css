@@ -11,7 +11,7 @@
     @apply bg-primary text-white rounded-lg px-2
 }
 .active .navm{
-    @apply border-t p-0
+    @apply border-t p-0 text-white scale-110
 }
 
 .active .ic{

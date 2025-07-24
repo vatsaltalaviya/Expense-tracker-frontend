@@ -67,7 +67,7 @@ const App = () => {
           <div className="w-full flex justify-evenly space-x-3 py-0.5 px-2">
             {sidemenu.map((item, i) => (
               <NavLink className="text-white/45 " key={i} to={item.navigate}>
-                <div className="flex navm transition-all duration-500 items-center">
+                <div className="flex navm scale-75 transition-all duration-500 items-center">
                   <i
                     onClick={item.onclick}
                     className={`${item.icon} ic text-3xl`}
