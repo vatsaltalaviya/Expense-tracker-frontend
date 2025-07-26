@@ -92,18 +92,18 @@ const AllTransaction = () => {
       }
 
   return (
-    <div className="w-full shadow-lg px-4 py-4">
-      <div className="flex justify-between items-center mb-2">
+    <div className="w-full shadow-lg px-4 py-4 bg-white dark:bg-zinc-800 rounded">
+      <div className="flex justify-between items-center mb-2 ">
         <h1 className="text-lg font-semibold">All Transaction</h1>
         <div className="flex gap-2">
           <button
-            className="px-3 py-1 rounded bg-zinc-200"
+            className="px-3 py-1 rounded bg-zinc-200 dark:bg-zinc-900"
             onClick={handleDownloadExcel}
           >
             <i className="ri-file-excel-line" />
           </button>
           <button
-            className="px-3 py-1 rounded bg-zinc-200"
+            className="px-3 py-1 rounded bg-zinc-200 dark:bg-zinc-900"
             onClick={handleDownloadPDF}
           >
             <i className="ri-file-pdf-2-line" />
@@ -126,26 +126,26 @@ const AllTransaction = () => {
           <table className="w-full table-auto">
             <thead>
               <tr>
-                <td className="text-sm w-4 px-2 py-1 font-medium text-gray-600">
+                <td className="text-sm w-4 px-2 py-1 font-medium text-gray-600 dark:text-gray-400">
                   ID
                 </td>
-                <td className="text-sm w-16 px-2 py-1 font-medium text-gray-600">
+                <td className="text-sm w-16 px-2 py-1 font-medium text-gray-600 dark:text-gray-400">
                   Type
                 </td>
-                <td className="text-sm w-26 px-2 py-1 font-medium text-gray-600">
+                <td className="text-sm w-26 px-2 py-1 font-medium text-gray-600 dark:text-gray-400">
                   Date
                 </td>
-                <td className="text-sm w-24 px-2 py-1 font-medium text-gray-600">
+                <td className="text-sm w-24 px-2 py-1 font-medium text-gray-600 dark:text-gray-400">
                   Amount
                 </td>
-                <td className="text-sm w-24 px-2 py-1 font-medium text-gray-600">
+                <td className="text-sm w-24 px-2 py-1 font-medium text-gray-600 dark:text-gray-400">
                   Category
                 </td>
               </tr>
             </thead>
             <tbody>
               {RecentTransaction?.map((data, i) => (
-                <tr key={i} className="hover:bg-gray-100">
+                <tr key={i} className="hover:bg-gray-100 dark:hover:bg-gray-800">
                   <td className="text-sm px-2 py-3 font-semibold text-blue-500 border-t border-t-gray-500/20">
                     {i + 1}
                   </td>
@@ -156,17 +156,13 @@ const AllTransaction = () => {
                     {data.date}
                   </td>
                   <td
-                    className={`text-sm px-2 py-3  font-semibold border-t ${
-                      data.type === "Expense"
-                        ? "text-red-800"
-                        : "text-emerald-800"
-                    } border-t-gray-500/20`}
+                    className={`text-sm px-2 py-3  font-semibold border-t text-white border-t-gray-500/20`}
                   >
                     <span
                       className={`rounded px-2 py-1 whitespace-nowrap ${
                         data.type === "Expense"
-                          ? "bg-red-100"
-                          : "bg-emerald-100"
+                          ? "bg-red-500"
+                          : "bg-emerald-500"
                       }`}
                     >
                       {data.type === "Expense" ? "-" : "+"}₹{data.amount}

@@ -1,5 +1,5 @@
 import { BarChart, pieArcLabelClasses, PieChart } from "@mui/x-charts";
-import React, { useEffect, useMemo, useState } from "react";
+import React, {  useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaMoneyBillWave } from "react-icons/fa";
 import { MdSavings } from "react-icons/md";
@@ -14,6 +14,10 @@ import { getExpense } from "../slice/expense.slice";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { animate, motion } from "framer-motion";
+
+
+
+
 
 const chartSetting = {
   yAxis: [
@@ -252,7 +256,7 @@ const Dashboard = () => {
             <FaMoneyBillTrendUp className="text-3xl" />
           </div>
         </div>
-        <div className="w-full p-6 flex justify-between bg-white  shadow-lg  rounded">
+        <div className="w-full p-6 flex justify-between bg-white dark:bg-zinc-800 dark:text-white  shadow-lg  rounded">
           <div className="shrink-0">
             <h1 className="text-2xl font-semibold">₹{totalbal}</h1>
             <h1 className="text-xs font-semibold">Total Balance</h1>
@@ -263,11 +267,11 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="w-full flex gap-2 bg-white rounded items-center py-4">
+      <div className="w-full flex gap-2 bg-white dark:bg-zinc-800 dark:text-white rounded items-center py-4">
         <div className="w-full">
           <div className="flex w-full justify-between px-2">
             <h1 className="text-lg px-2 font-semibold">Statastics</h1>
-            <select value={mode} onChange={(e)=>setmode(e.target.value)} className="px-4 py-2 rounded-lg  bg-white text-gray-700 focus:ring-1 ">
+            <select value={mode} onChange={(e)=>setmode(e.target.value)} className="px-4 py-2 rounded-lg  bg-white dark:bg-zinc-900 dark:text-white text-gray-700 focus:ring-1 ">
               <option value="yearly">Year</option>
               <option value="monthly">Month</option>
             </select>
@@ -287,12 +291,12 @@ const Dashboard = () => {
       </div>
 
       <div className="w-full flex flex-col  xl:flex-row gap-4 items-center py-4">
-        <div className="w-full xl:w-1/2 bg-white shadow-lg shadow-zinc-300 rounded-xl py-2 px-2">
+        <div className="w-full xl:w-1/2 bg-white dark:bg-zinc-800 dark:text-white shadow-lg shadow-zinc-300 dark:shadow-none rounded-xl py-2 px-2">
           <div className="flex w-full justify-between py-4">
             <h1 className="text-lg font-semibold">Expenses</h1>
             <button
               onClick={() => navigate("/expense")}
-              className="text-xs px-2 py-1 rounded font-medium bg-zinc-200"
+              className="text-xs px-2 py-1 rounded font-medium bg-zinc-200 dark:bg-zinc-900"
             >
               See All <i className="ri-arrow-right-line"></i>
             </button>
@@ -305,7 +309,7 @@ const Dashboard = () => {
               {ExpenseTransaction?.slice(0, 5)?.map((data, id) => (
                 <div
                   key={id}
-                  className="flex items-center justify-between rounded-lg mt-2 hover:bg-zinc-100 transition-all duration-150 px-2 py-4"
+                  className="flex items-center justify-between rounded-lg mt-2 hover:bg-zinc-100 dark:hover:bg-zinc-600 dark:shadow-none transition-all duration-150 px-2 py-4"
                 >
                   <div className="flex gap-4">
                     <div className="rounded ">
@@ -325,7 +329,7 @@ const Dashboard = () => {
                       </h3>
                     </div>
                   </div>
-                  <span className="px-2 py-1 bg-red-200 rounded-lg text-red-500 font-semibold">
+                  <span className="px-2 py-1 bg-red-500 rounded-lg text-white font-semibold">
                     ₹{data.amount}
                   </span>
                 </div>
@@ -333,12 +337,12 @@ const Dashboard = () => {
             </>
           )}
         </div>
-        <div className="w-full xl:w-1/2 shadow-lg bg-white shadow-zinc-300 rounded-xl py-2 px-2">
+        <div className="w-full xl:w-1/2 shadow-lg bg-white dark:bg-zinc-800 dark:text-white shadow-zinc-300 dark:shadow-zinc-600 dark:shadow-none rounded-xl py-2 px-2">
           <div className="flex w-full justify-between py-4">
             <h1 className="text-lg font-semibold">Income</h1>
             <button
               onClick={() => navigate("/income")}
-              className="text-xs px-2 py-1 rounded font-medium bg-zinc-200"
+              className="text-xs px-2 py-1 rounded font-medium bg-zinc-200  dark:bg-zinc-900"
             >
               See All <i className="ri-arrow-right-line"></i>
             </button>
@@ -351,7 +355,7 @@ const Dashboard = () => {
               {IncomeTransaction.slice(0, 5)?.map((data, id) => (
                 <div
                   key={id}
-                  className="flex items-center justify-between rounded-lg mt-2 hover:bg-zinc-100 transition-all duration-150 px-2 py-4"
+                  className="flex items-center justify-between rounded-lg mt-2 hover:bg-zinc-100 dark:hover:bg-zinc-600 transition-all duration-150 px-2 py-4"
                 >
                   <div className="flex gap-4">
                     <div className="rounded ">
@@ -371,7 +375,7 @@ const Dashboard = () => {
                       </h3>
                     </div>
                   </div>
-                  <span className="px-2 py-1 bg-green-200 rounded-lg text-emerald-800 font-semibold">
+                  <span className="px-2 py-1 bg-emerald-800 rounded-lg text-white font-semibold">
                     ₹{data.amount}
                   </span>
                 </div>
@@ -381,18 +385,18 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="flex justify-between">
+      <div className="flex justify-between mb-2">
         <h1 className="text-lg font-semibold">Recent Transaction</h1>
         <div className="flex gap-2">
           <button
-            className="px-3 py-1 rounded bg-zinc-200"
+            className="px-3 py-1 rounded bg-zinc-200 dark:bg-zinc-800"
             title="Export Excel"
             onClick={() => handleDownloadExcel()}
           >
             <i className="ri-file-excel-line"></i>
           </button>
           <button
-            className="px-3 py-1 rounded bg-zinc-200"
+            className="px-3 py-1 rounded bg-zinc-200 dark:bg-zinc-800"
             title="Export PDF"
             onClick={() => handleDownloadPDF()}
           >
@@ -400,36 +404,36 @@ const Dashboard = () => {
           </button>
           <button
             onClick={() => navigate("/alltransactions")}
-            className="text-xs px-2 py-1 rounded font-medium bg-zinc-200"
+            className="text-xs px-2 py-1 rounded font-medium bg-zinc-200 dark:bg-zinc-800"
           >
             See All <i className="ri-arrow-right-line"></i>
           </button>
         </div>
       </div>
-      <div className="w-full bg-white rounded-lg shadow-lg px-4 py-4 overflow-y-auto ">
+      <div className="w-full bg-white dark:bg-zinc-800 dark:text-white shadow-lg shadow-zinc-300  rounded-lg dark:shadow-none px-4 py-4 overflow-y-auto ">
         <table className="w-full ">
           <thead>
             <tr>
-              <td className="text-sm px-2 py-1 font-medium text-gray-600 w-xl">
+              <td className="text-sm px-2 py-1 font-medium text-gray-600 dark:text-gray-400 w-xl">
                 ID
               </td>
-              <td className="text-sm px-2 py-1 font-medium text-gray-600 w-xl">
+              <td className="text-sm px-2 py-1 font-medium text-gray-600 dark:text-gray-400 w-xl">
                 Type
               </td>
-              <td className="text-sm px-2 py-1 font-medium text-gray-600 w-xl">
+              <td className="text-sm px-2 py-1 font-medium text-gray-600 dark:text-gray-400 w-xl">
                 Date
               </td>
-              <td className="text-sm px-2 py-1 font-medium text-gray-600 w-xl">
+              <td className="text-sm px-2 py-1 font-medium text-gray-600 dark:text-gray-400 w-xl">
                 Amount
               </td>
-              <td className="text-sm px-2 py-1 font-medium text-gray-600 w-xl">
+              <td className="text-sm px-2 py-1 font-medium text-gray-600 dark:text-gray-400 w-xl">
                 Category
               </td>
             </tr>
           </thead>
           <tbody>
             {RecentTransaction?.map((data, i) => (
-              <tr key={i} className="hover:bg-gray-100">
+              <tr key={i} className="hover:bg-gray-100 dark:hover:bg-gray-800 ">
                 <td
                   className={`text-sm px-2 py-3 font-semibold border-t text-blue-500 border-t-gray-500/20`}
                 >
@@ -446,13 +450,11 @@ const Dashboard = () => {
                   {data.date}
                 </td>
                 <td
-                  className={`text-sm px-2 py-3 font-semibold border-t ${
-                    data.type == "Expense" ? "text-red-800" : "text-emerald-800"
-                  } border-t-gray-500/20`}
+                  className={`text-sm px-2 py-3 font-semibold border-t text-white border-t-gray-500/20`}
                 >
                   <span
                     className={`rounded px-2 py-1 shrink-0 whitespace-nowrap ${
-                      data.type == "Expense" ? "bg-red-100" : "bg-emerald-100"
+                      data.type == "Expense" ? "bg-red-500" : "bg-emerald-500"
                     }`}
                   >
                     {data.type == "Expense" ? "-" : "+"}₹{data.amount}

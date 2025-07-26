@@ -172,7 +172,7 @@ const Income = () => {
 
   return (
     <div className="w-full">
-      <div className="w-full bg-white shadow-lg rounded-lg px-2 py-2">
+      <div className="w-full bg-white dark:bg-zinc-800 shadow-lg rounded-lg px-2 py-2">
         <div className="flex justify-between">
           <div>
             <h1 className="text-lg font-medium">Income Overview</h1>
@@ -184,14 +184,14 @@ const Income = () => {
            <select
             value={mode}
             onChange={(e) => setmode(e.target.value)}
-            className="px-4 py-2 rounded-lg  bg-white text-gray-700 focus:ring-1 "
+            className="px-4 py-2 rounded-lg  bg-white dark:text-white dark:bg-zinc-900 text-gray-700 focus:ring-1 "
           >
             <option value="yearly">Year</option>
             <option value="monthly">Month</option>
           </select>
            <button
             onClick={() => setshowAddIncome(true)}
-            className="text-primary textolg px-2 py-2 font-medium border bg-zinc-200/20 rounded border-zinc-500/15"
+            className="text-primary dark:text-white text-lg px-2 py-2 font-medium border bg-zinc-200/20 rounded border-zinc-500/15"
           >
             Add Income
           </button>
@@ -210,20 +210,20 @@ const Income = () => {
           />
         )}
       </div>
-      <div className="w-full bg-white rounded-lg max-h-[50vh] mt-5 shadow-lg px-4 py-4 overflow-x-auto noscrollbar">
+      <div className="w-full bg-white dark:bg-zinc-800 rounded-lg max-h-[50vh] mt-5 shadow-lg px-4 py-4 overflow-x-auto noscrollbar">
         <div className="flex py-1 justify-between">
           <h1 className="text-lg font-semibold">Income</h1>
           <div className="flex gap-2">
             <button
               onClick={() => handleDownloadExcel()}
-              className="px-3 py-1 rounded bg-zinc-200"
+              className="px-3 py-1 rounded bg-zinc-200 dark:bg-zinc-800"
               title="Export Excel"
             >
               <i className="ri-file-excel-line"></i>
             </button>
             <button
               onClick={() => handleDownloadPDF()}
-              className="px-3 py-1 rounded bg-zinc-200"
+              className="px-3 py-1 rounded bg-zinc-200 dark:bg-zinc-800"
               title="Export PDF"
             >
               <i className="ri-file-pdf-2-line"></i>
@@ -233,20 +233,20 @@ const Income = () => {
         <table className="w-full ">
           <thead>
             <tr>
-              <td className="text-sm px-2 py-1 font-medium text-gray-600 w-xl">
+              <td className="text-sm px-2 py-1 font-medium text-gray-600 dark:text-gray-400 w-xl">
                 ID
               </td>
 
-              <td className="text-sm px-2 py-1 font-medium text-gray-600 w-xl">
+              <td className="text-sm px-2 py-1 font-medium text-gray-600 dark:text-gray-400 w-xl">
                 Date
               </td>
-              <td className="text-sm px-2 py-1 font-medium text-gray-600 w-xl">
+              <td className="text-sm px-2 py-1 font-medium text-gray-600 dark:text-gray-400 w-xl">
                 Amount
               </td>
-              <td className="text-sm px-2 py-1 font-medium text-gray-600 w-xl">
+              <td className="text-sm px-2 py-1 font-medium text-gray-600 dark:text-gray-400 w-xl">
                 Category
               </td>
-              <td className="text-sm px-2 py-1 font-medium text-center text-gray-600 w-xl">
+              <td className="text-sm px-2 py-1 font-medium text-center text-gray-600 dark:text-gray-400 w-xl">
                 Delete
               </td>
             </tr>
@@ -256,7 +256,7 @@ const Income = () => {
               <TableLoading />
             ) : (
               IncomeTransaction?.map((data, i) => (
-                <tr key={i} className="hover:bg-gray-100">
+                <tr key={i} className="hover:bg-gray-100 dark:hover:bg-gray-800">
                   <td
                     className={`text-sm px-2 py-3 font-semibold border-t text-blue-500 border-t-gray-500/20`}
                   >
@@ -295,7 +295,7 @@ const Income = () => {
         <div className="w-full h-full fixed top-0 left-0 xl:translate-x-16 bg-zinc-900/40 flex items-center justify-center">
           <form
             onSubmit={handlesubmit}
-            className="w-sm bg-white px-6 py-6 space-y-6 shadow-2xl inset-0 -shadow-lg rounded-xl"
+            className="w-sm bg-white dark:bg-zinc-800 dark:text-white px-6 py-6 space-y-6 shadow-2xl inset-0 -shadow-lg rounded-xl"
           >
             <div className="flex justify-between">
               <h1 className="text-xl font-semibold">Add Income</h1>

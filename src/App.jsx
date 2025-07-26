@@ -49,7 +49,7 @@ const App = () => {
   };
 
   return (
-    <div className="flex relative flex-col md:flex-row h-screen bg-zinc-100">
+    <div className="flex relative flex-col md:flex-row h-screen bg-zinc-100 dark:bg-zinc-900 dark:text-white">
       {/* Sidebar - hidden on login and hidden on small screens */}
       {!isLoginPage && (
         <aside className="hidden md:block fixed top-0 left-0 h-screen w-64 bg-gray-800 z-10">

@@ -4,9 +4,29 @@
     --color-primary:#8033fb;
     --color-secondary:#fe6b3a;
 }
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base{
+    html{
+        @apply transition-all duration-200
+    }
+    body{
+        @apply bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100
+    }
+}
+
 *{
     font-family: "Montserrat", sans-serif;
 }
+
+*::-webkit-scrollbar-track{
+     background-color: #27272a; 
+}
+::-webkit-scrollbar{
+    display: none;
+}
+
+
 .active .nav{
     @apply bg-primary text-white rounded-lg px-2
 }
