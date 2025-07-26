@@ -1,5 +1,5 @@
-import { BarChart, pieArcLabelClasses, PieChart } from "@mui/x-charts";
-import React, {  useEffect, useMemo, useState } from "react";
+import { BarChart } from "@mui/x-charts";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaMoneyBillWave } from "react-icons/fa";
 import { MdSavings } from "react-icons/md";
@@ -14,31 +14,32 @@ import { getExpense } from "../slice/expense.slice";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { animate, motion } from "framer-motion";
-
-
-
-
-
-const chartSetting = {
-  yAxis: [
-    {
-      label: "Money (₹)",
-      width: 60,
-    },
-  ],
-  height: 330,
-};
+import useIsDarkMode from "../Hook/useIsDarkMode";
 
 const Dashboard = () => {
+  const isDarkMode = useIsDarkMode();
+
+  const chartSetting = {
+    yAxis: [
+      {
+        label: "Money (₹)",
+        width: 60,
+      },
+    ],
+    labelStyle: { fill: isDarkMode ? "white" : "black" },
+    tickLabelStyle: { fill: isDarkMode ? "white" : "black" },
+    height: 330,
+  };
   const id = useMemo(() => localStorage.getItem("userid"), []);
 
   const [totalincome, settotalincome] = useState(0);
   const [totalexpense, settotalexpense] = useState(0);
   const [totalbal, settotalbal] = useState(0);
-  const [mode, setmode] = useState('yearly');
+  const [mode, setmode] = useState("yearly");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const { summary, recentTransaction, chartTrand } = useSelector(
     (state) => state.summary
   );
@@ -232,11 +233,13 @@ const Dashboard = () => {
     }
   };
 
-
   return (
     <div className="py-2 ">
       <div className="w-full flex flex-col xl:flex-row gap-4 items-center py-4">
-        <div onClick={()=>navigate('/income')} className="w-full p-6 flex justify-between bg-primary text-white  rounded">
+        <div
+          onClick={() => navigate("/income")}
+          className="w-full p-6 flex justify-between bg-primary text-white  rounded"
+        >
           <div className="shrink-0">
             <h1 className="text-2xl font-semibold">₹{totalincome}</h1>
             <h1 className="text-xs font-semibold">Total Income</h1>
@@ -245,7 +248,10 @@ const Dashboard = () => {
             <MdSavings className="text-3xl" />
           </div>
         </div>
-        <div onClick={()=>navigate('/expense')} className="w-full p-6 flex justify-between bg-secondary text-white rounded">
+        <div
+          onClick={() => navigate("/expense")}
+          className="w-full p-6 flex justify-between bg-secondary text-white rounded"
+        >
           <div className="shrink-0">
             <motion.h1 className="text-2xl font-semibold">
               ₹{totalexpense}
@@ -271,13 +277,17 @@ const Dashboard = () => {
         <div className="w-full">
           <div className="flex w-full justify-between px-2">
             <h1 className="text-lg px-2 font-semibold">Statastics</h1>
-            <select value={mode} onChange={(e)=>setmode(e.target.value)} className="px-4 py-2 rounded-lg  bg-white dark:bg-zinc-900 dark:text-white text-gray-700 focus:ring-1 ">
+            <select
+              value={mode}
+              onChange={(e) => setmode(e.target.value)}
+              className="px-4 py-2 rounded-lg  bg-white dark:bg-zinc-900 dark:text-white text-gray-700 focus:ring-1 "
+            >
               <option value="yearly">Year</option>
               <option value="monthly">Month</option>
             </select>
           </div>
           <BarChart
-            dataset={monthlyDataset||[]}
+            dataset={monthlyDataset || []}
             xAxis={[{ dataKey: "month" }]}
             series={[
               { dataKey: "income", label: "Income", color: "#8033fb" },
@@ -286,6 +296,20 @@ const Dashboard = () => {
             height={350}
             {...chartSetting}
             borderRadius={32}
+            sx={{
+              "& .MuiChartsAxis-tickLabel": {
+                fill: isDarkMode ? "white" : "black", // axis labels
+              },
+              "& .MuiChartsAxis-label": {
+                fill: isDarkMode ? "white" : "black", // axis title
+              },
+              "& .MuiChartsLegend-root text": {
+                fill: isDarkMode ? "white " : "black ", // legend text
+              },
+              "& .MuiChartsTooltip-root": {
+      color: isDarkMode ? "white" : "black",
+    },
+            }}
           />
         </div>
       </div>

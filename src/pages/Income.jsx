@@ -9,6 +9,7 @@ import {
 } from "../slice/income.slice";
 import { BeatLoader } from "react-spinners";
 import axios from "axios";
+import useIsDarkMode from "../Hook/useIsDarkMode";
 
 const Income = () => {
   const [showAddIncome, setshowAddIncome] = useState(false);
@@ -20,6 +21,7 @@ const Income = () => {
   const [desc, setdesc] = useState("");
   const [mode, setmode] = useState("yearly");
   const [bars, setBars] = useState(6); // default to 6
+    const isDarkMode = useIsDarkMode();
   
     useEffect(() => {
       const handleResize = () => {
@@ -207,6 +209,18 @@ const Income = () => {
             xAxis={[{ data: Incomelabel }]}
             yAxis={[{ width: 50 }]}
             loading={false}
+            sx={{
+              "& .MuiChartsAxis-tickLabel": {
+                fill: isDarkMode ? "white" : "black", // axis labels
+              },
+              "& .MuiChartsAxis-label": {
+                fill: isDarkMode ? "white" : "black", // axis title
+              },
+              "& .MuiChartsLegend-root text": {
+                fill: isDarkMode ? "white " : "black ", // legend text
+              },
+             
+            }}
           />
         )}
       </div>

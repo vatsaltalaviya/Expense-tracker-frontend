@@ -9,6 +9,7 @@ import {
 } from "../slice/expense.slice";
 import { BeatLoader } from "react-spinners";
 import axios from "axios";
+import useIsDarkMode from "../Hook/useIsDarkMode";
 
 const Expense = () => {
   const [showAddExpense, setshowAddExpense] = useState(false);
@@ -20,6 +21,8 @@ const Expense = () => {
   const [desc, setdesc] = useState("");
    const [mode, setmode] = useState('yearly');
     const [bars, setBars] = useState(6); // default to 6
+
+      const isDarkMode = useIsDarkMode();
 
   useEffect(() => {
     const handleResize = () => {
@@ -209,6 +212,18 @@ const Expense = () => {
             xAxis={[{ data: Expenselabel }]}
             yAxis={[{ width: 50 }]}
             loading={false}
+            sx={{
+              "& .MuiChartsAxis-tickLabel": {
+                fill: isDarkMode ? "white" : "black", // axis labels
+              },
+              "& .MuiChartsAxis-label": {
+                fill: isDarkMode ? "white" : "black", // axis title
+              },
+              "& .MuiChartsLegend-root text": {
+                fill: isDarkMode ? "white " : "black ", // legend text
+              },
+              
+            }}
           />
         )}
       </div>
