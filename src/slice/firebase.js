@@ -2,10 +2,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
-
-
-
-
 const firebaseConfig = {
   apiKey: `${import.meta.env.VITE_FIREBASE_APIKEY}`,
   authDomain: "rupee-root-5f259.firebaseapp.com",

@@ -1,4 +1,14 @@
-import { BarChart } from "@mui/x-charts";
+// import { BarChart } from "@mui/x-charts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  CartesianGrid,
+  ResponsiveContainer,
+} from "recharts";
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaMoneyBillWave } from "react-icons/fa";
@@ -286,7 +296,7 @@ const Dashboard = () => {
               <option value="monthly">Month</option>
             </select>
           </div>
-          <BarChart
+          {/* <BarChart
             dataset={monthlyDataset || []}
             xAxis={[{ dataKey: "month" }]}
             series={[
@@ -310,7 +320,52 @@ const Dashboard = () => {
       color: isDarkMode ? "white" : "black",
     },
             }}
-          />
+          /> */}
+          <ResponsiveContainer width="100%" height={400} className={`px-4`}>
+            <BarChart width={600} height={300} data={monthlyDataset}>
+              <XAxis dataKey="month" />
+
+              <YAxis />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: isDarkMode ? "#333" : "#fff", // dark/light background
+                  borderRadius: "8px",
+                  border: "none",
+                }}
+                itemStyle={{
+                  color: isDarkMode ? "#fff" : "#000", // text color based on mode
+                  fontSize: "14px",
+                }}
+                labelStyle={{ color: isDarkMode ? "#ccc" : "#333" }}
+                formatter={(value, name) => [
+                  `₹${value}`,
+                  name === "income" ? "Income" : "Expense",
+                ]}
+              />
+              <Legend />
+              {/* <CartesianGrid stroke="#ccc" strokeDasharray="5 5" /> */}
+              <Bar
+                dataKey="income"
+                name="Income"
+                fill="#8033fb"
+                radius={[20, 20, 0, 0]}
+                activeBar={{
+                  stroke: "#333", // optional outline
+                  strokeWidth: 1,
+                }}
+              />
+              <Bar
+                dataKey="expense"
+                name="Expense"
+                fill="#fe6b3a"
+                radius={[20, 20, 0, 0]}
+                activeBar={{
+                  stroke: "#333", // optional outline
+                  strokeWidth: 1,
+                }}
+              />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </div>
 

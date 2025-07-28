@@ -1,4 +1,12 @@
-import { BarChart, BarPlot, ChartContainer } from "@mui/x-charts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -71,13 +79,10 @@ const Income = () => {
     });
   }, [income]);
   const IncomeTrend = useMemo(() => {
-    return incomeTrend
-      ?.filter((d) => d.income !== 0) // only keep items with income > 0
-      .map((d) => d.income);
-  }, [incomeTrend]);
-  const Incomelabel = useMemo(() => {
-    return incomeTrend?.filter((d) => d.income !== 0).map((d) => d.name);
-  }, [incomeTrend]);
+  return incomeTrend?.filter((d) => d.income !== 0);
+}, [incomeTrend]);
+
+ 
 
   const handlesubmit = async (e) => {
     e.preventDefault();
@@ -171,7 +176,6 @@ const Income = () => {
       console.error(error);
     }
   };
-
   return (
     <div className="w-full">
       <div className="w-full bg-white dark:bg-zinc-800 shadow-lg rounded-lg px-2 py-2">
@@ -203,25 +207,41 @@ const Income = () => {
         {trendLoading ? (
           <BarChartSkeleton bars={bars}/>
         ) : (
-          <BarChart
-            height={300}
-            series={[{ data: IncomeTrend, label: "Income", id: "pvId", color:"#8033fb"}]}
-            xAxis={[{ data: Incomelabel }]}
-            yAxis={[{ width: 50 }]}
-            loading={false}
-            sx={{
-              "& .MuiChartsAxis-tickLabel": {
-                fill: isDarkMode ? "white" : "black", // axis labels
-              },
-              "& .MuiChartsAxis-label": {
-                fill: isDarkMode ? "white" : "black", // axis title
-              },
-              "& .MuiChartsLegend-root text": {
-                fill: isDarkMode ? "white " : "black ", // legend text
-              },
-             
-            }}
-          />
+          <ResponsiveContainer width="100%" height={400} className={`px-4`}>
+                      <BarChart width={600} height={300} data={IncomeTrend}>
+                        <XAxis dataKey='name' />
+                        <YAxis />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: isDarkMode ? "#333" : "#fff", // dark/light background
+                            borderRadius: "8px",
+                            border: "none",
+                          }}
+                          itemStyle={{
+                            color: isDarkMode ? "#fff" : "#000", // text color based on mode
+                            fontSize: "14px",
+                          }}
+                          labelStyle={{ color: isDarkMode ? "#ccc" : "#333" }}
+                          formatter={(value, name) => [
+                            `₹${value}`,
+                            name === "income" ? "Income" : "Expense",
+                          ]}
+                        />
+                        <Legend />
+                        {/* <CartesianGrid stroke="#ccc" strokeDasharray="5 5" /> */}
+          
+                        <Bar
+                          dataKey="income"
+                          name="name"
+                          fill="#fe6b3a"
+                          radius={[20, 20, 0, 0]}
+                          activeBar={{
+                            stroke: "#333", // optional outline
+                            strokeWidth: 1,
+                          }}
+                        />
+                      </BarChart>
+                    </ResponsiveContainer>
         )}
       </div>
       <div className="w-full bg-white dark:bg-zinc-800 rounded-lg max-h-[50vh] mt-5 shadow-lg px-4 py-4 overflow-x-auto noscrollbar">

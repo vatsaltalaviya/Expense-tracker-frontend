@@ -1,4 +1,12 @@
-import { BarChart } from "@mui/x-charts";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -19,15 +27,14 @@ const Expense = () => {
   const [paymentMethod, setpaymentMethod] = useState("");
   const [source, setsource] = useState("");
   const [desc, setdesc] = useState("");
-   const [mode, setmode] = useState('yearly');
-    const [bars, setBars] = useState(6); // default to 6
+  const [mode, setmode] = useState("yearly");
+  const [bars, setBars] = useState(6); // default to 6
 
-      const isDarkMode = useIsDarkMode();
+  const isDarkMode = useIsDarkMode();
 
   useEffect(() => {
     const handleResize = () => {
       setBars(window.innerWidth < 640 ? 4 : 6); // sm breakpoint in Tailwind is 640px
-
     };
 
     handleResize(); // call on mount
@@ -45,13 +52,11 @@ const Expense = () => {
     AddexpenseLoading,
   } = useSelector((state) => state.expense);
   const id = localStorage.getItem("userid");
-  
+
   useEffect(() => {
     dispatch(getExpense(id));
- 
   }, []);
   useEffect(() => {
-
     dispatch(getExpenseTrend(mode));
   }, [mode]);
 
@@ -75,10 +80,7 @@ const Expense = () => {
     });
   }, [expense]);
   const ExpenseTrend = useMemo(() => {
-    return expenseTrend?.filter((d) => d.expense !== 0) .map((d) => d.expense);
-  }, [expenseTrend]);
-  const Expenselabel = useMemo(() => {
-    return expenseTrend?.filter((d) => d.expense !== 0) .map((d) => d.name);
+    return expenseTrend?.filter((d) => d.expense !== 0);
   }, [expenseTrend]);
 
   const handlesubmit = async (e) => {
@@ -116,65 +118,62 @@ const Expense = () => {
       console.error(error);
     }
   };
-  const handleDownloadExcel =async()=>{
-      
-      try {
-        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/export/expense/${id}`, {
+  const handleDownloadExcel = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/export/expense/${id}`,
+        {
           responseType: "blob", // 👈 Important to receive file as Blob
-        })
-       
-        
-        if(res.status == 200){
-           // Create a blob from response
+        }
+      );
+
+      if (res.status == 200) {
+        // Create a blob from response
         const blob = new Blob([res.data], {
-          type:
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         });
-  
+
         // Create a download link
         const link = document.createElement("a");
         link.href = window.URL.createObjectURL(blob);
         link.download = "expense-data.xlsx"; // Set filename
         link.click(); // Trigger download
-  
+
         // Cleanup
         window.URL.revokeObjectURL(link.href);
-        }
-      } catch (error) {
-        console.error(error);
-        
       }
+    } catch (error) {
+      console.error(error);
     }
-    const handleDownloadPDF =async()=>{
-      try {
-        const res = await axios.get(`${import.meta.env.VITE_BASE_URL}/export/expense/pdf/${id}`, {
+  };
+  const handleDownloadPDF = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/export/expense/pdf/${id}`,
+        {
           responseType: "blob", // 👈 Important to receive file as Blob
-        })
-  
-        
-        if(res.status == 200){
-           // Create a blob from response
+        }
+      );
+
+      if (res.status == 200) {
+        // Create a blob from response
         const blob = new Blob([res.data], {
-          type:
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         });
-  
+
         // Create a download link
         const link = document.createElement("a");
         link.href = window.URL.createObjectURL(blob);
         link.download = "expense-data.pdf"; // Set filename
         link.click(); // Trigger download
-  
+
         // Cleanup
         window.URL.revokeObjectURL(link.href);
-        }
-      } catch (error) {
-        console.error(error);
-        
       }
+    } catch (error) {
+      console.error(error);
     }
-
-  
+  };
 
   return (
     <div className="w-full">
@@ -187,66 +186,82 @@ const Expense = () => {
             </h3>
           </div>
           <div className="space-x-3">
-             <select
-            value={mode}
-            onChange={(e) => setmode(e.target.value)}
-            className="px-4 py-2 rounded-lg  bg-white dark:text-white dark:bg-zinc-900 text-gray-700 focus:ring-1 "
-          >
-            <option value="yearly">Year</option>
-            <option value="monthly">Month</option>
-          </select>
+            <select
+              value={mode}
+              onChange={(e) => setmode(e.target.value)}
+              className="px-4 py-2 rounded-lg  bg-white dark:text-white dark:bg-zinc-900 text-gray-700 focus:ring-1 "
+            >
+              <option value="yearly">Year</option>
+              <option value="monthly">Month</option>
+            </select>
             <button
-            onClick={() => setshowAddExpense(true)}
-            className="text-primary text-lg px-2 py-2 dark:text-white font-medium border bg-zinc-200/20 rounded border-zinc-500/15"
-          >
-            Add Expense
-          </button>
+              onClick={() => setshowAddExpense(true)}
+              className="text-primary text-lg px-2 py-2 dark:text-white font-medium border bg-zinc-200/20 rounded border-zinc-500/15"
+            >
+              Add Expense
+            </button>
           </div>
         </div>
         {trendLoading ? (
           <BarChartSkeleton bars={bars} />
         ) : (
-          <BarChart
-            height={300}
-            series={[{ data: ExpenseTrend, label: "Expense", id: "pvId", color:"#fe6b3a" }]}
-            xAxis={[{ data: Expenselabel }]}
-            yAxis={[{ width: 50 }]}
-            loading={false}
-            sx={{
-              "& .MuiChartsAxis-tickLabel": {
-                fill: isDarkMode ? "white" : "black", // axis labels
-              },
-              "& .MuiChartsAxis-label": {
-                fill: isDarkMode ? "white" : "black", // axis title
-              },
-              "& .MuiChartsLegend-root text": {
-                fill: isDarkMode ? "white " : "black ", // legend text
-              },
-              
-            }}
-          />
+          <ResponsiveContainer width="100%" height={400} className={`px-4`}>
+            <BarChart width={600} height={300} data={ExpenseTrend}>
+              <XAxis dataKey='name' />
+              <YAxis />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: isDarkMode ? "#333" : "#fff", // dark/light background
+                  borderRadius: "8px",
+                  border: "none",
+                }}
+                itemStyle={{
+                  color: isDarkMode ? "#fff" : "#000", // text color based on mode
+                  fontSize: "14px",
+                }}
+                labelStyle={{ color: isDarkMode ? "#ccc" : "#333" }}
+                formatter={(value, name) => [
+                  `₹${value}`,
+                  name === "income" ? "Income" : "Expense",
+                ]}
+              />
+              <Legend />
+              {/* <CartesianGrid stroke="#ccc" strokeDasharray="5 5" /> */}
+
+              <Bar
+                dataKey="expense"
+                name="Expense"
+                fill="#fe6b3a"
+                radius={[20, 20, 0, 0]}
+                activeBar={{
+                  stroke: "#333", // optional outline
+                  strokeWidth: 1,
+                }}
+              />
+            </BarChart>
+          </ResponsiveContainer>
         )}
       </div>
       <div className="w-full max-h-[50vh] mt-5 bg-white dark:bg-zinc-800 rounded-lg shadow-lg px-4 py-4 overflow-x-auto noscrollbar">
         <div className="flex py-1 justify-between">
-         <h1 className="text-lg font-semibold">Expense</h1>
-       <div className="flex gap-2">
+          <h1 className="text-lg font-semibold">Expense</h1>
+          <div className="flex gap-2">
             <button
               className="px-3 py-1 rounded bg-zinc-200 dark:bg-zinc-900"
               title="Export Excel"
-              onClick={()=>handleDownloadExcel()}
+              onClick={() => handleDownloadExcel()}
             >
               <i className="ri-file-excel-line"></i>
             </button>
             <button
               className="px-3 py-1 rounded bg-zinc-200 dark:bg-zinc-900"
               title="Export PDF"
-              onClick={()=>handleDownloadPDF()}
+              onClick={() => handleDownloadPDF()}
             >
               <i className="ri-file-pdf-2-line"></i>
             </button>
           </div>
-       </div>
+        </div>
         <table className="w-full ">
           <thead>
             <tr>
@@ -273,7 +288,10 @@ const Expense = () => {
               <TableLoading />
             ) : (
               ExpenseTransaction?.map((data, i) => (
-                <tr key={i} className="hover:bg-gray-100 dark:hover:bg-gray-800">
+                <tr
+                  key={i}
+                  className="hover:bg-gray-100 dark:hover:bg-gray-800"
+                >
                   <td
                     className={`text-sm px-2 py-3 font-semibold border-t text-blue-500 border-t-gray-500/20`}
                   >
@@ -298,7 +316,9 @@ const Expense = () => {
                   <td
                     className={`text-sm px-2 py-3 font-semibold border-t text-center border-t-gray-500/20`}
                   >
-                  <button onClick={()=>handleDelete(data.id)}><i className="ri-delete-bin-6-line"></i></button>
+                    <button onClick={() => handleDelete(data.id)}>
+                      <i className="ri-delete-bin-6-line"></i>
+                    </button>
                   </td>
                 </tr>
               ))
@@ -414,7 +434,7 @@ function TableLoading() {
     </>
   );
 }
-function BarChartSkeleton({bars}) {
+function BarChartSkeleton({ bars }) {
   return (
     <div className="w-full h-[300px] p-4 animate-pulse bg-gray-100 rounded-xl">
       <div className="h-full flex items-end justify-between space-x-2">

@@ -15,7 +15,7 @@ const Login = () => {
   const [pass, setpass] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { loading, error, user } = useSelector((state) => state.user);
+  const { loading} = useSelector((state) => state.user);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
