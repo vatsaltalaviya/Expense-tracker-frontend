@@ -29,17 +29,6 @@ import useIsDarkMode from "../Hook/useIsDarkMode";
 const Dashboard = () => {
   const isDarkMode = useIsDarkMode();
 
-  const chartSetting = {
-    yAxis: [
-      {
-        label: "Money (₹)",
-        width: 60,
-      },
-    ],
-    labelStyle: { fill: isDarkMode ? "white" : "black" },
-    tickLabelStyle: { fill: isDarkMode ? "white" : "black" },
-    height: 330,
-  };
   const id = useMemo(() => localStorage.getItem("userid"), []);
 
   const [totalincome, settotalincome] = useState(0);
