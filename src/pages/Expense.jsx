@@ -233,6 +233,7 @@ const Expense = () => {
                 name="Expense"
                 fill="#fe6b3a"
                 radius={[20, 20, 0, 0]}
+                barSize={40}
                 activeBar={{
                   stroke: "#333", // optional outline
                   strokeWidth: 1,

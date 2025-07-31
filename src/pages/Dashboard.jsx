@@ -272,31 +272,7 @@ const Dashboard = () => {
               <option value="monthly">Month</option>
             </select>
           </div>
-          {/* <BarChart
-            dataset={monthlyDataset || []}
-            xAxis={[{ dataKey: "month" }]}
-            series={[
-              { dataKey: "income", label: "Income", color: "#8033fb" },
-              { dataKey: "expense", label: "Expense", color: "#fe6b3a" },
-            ]}
-            height={350}
-            {...chartSetting}
-            borderRadius={32}
-            sx={{
-              "& .MuiChartsAxis-tickLabel": {
-                fill: isDarkMode ? "white" : "black", // axis labels
-              },
-              "& .MuiChartsAxis-label": {
-                fill: isDarkMode ? "white" : "black", // axis title
-              },
-              "& .MuiChartsLegend-root text": {
-                fill: isDarkMode ? "white " : "black ", // legend text
-              },
-              "& .MuiChartsTooltip-root": {
-      color: isDarkMode ? "white" : "black",
-    },
-            }}
-          /> */}
+          
           <ResponsiveContainer width="100%" height={400} className={`px-4`}>
             <BarChart width={600} height={300} data={monthlyDataset}>
               <XAxis dataKey="month" />
@@ -313,10 +289,7 @@ const Dashboard = () => {
                   fontSize: "14px",
                 }}
                 labelStyle={{ color: isDarkMode ? "#ccc" : "#333" }}
-                formatter={(value, name) => [
-                  `₹${value}`,
-                  name === "income" ? "Income" : "Expense",
-                ]}
+                formatter={(value, name) => [`₹${value}`, name]} // ✅ fix is here
               />
               <Legend />
               {/* <CartesianGrid stroke="#ccc" strokeDasharray="5 5" /> */}
@@ -329,12 +302,14 @@ const Dashboard = () => {
                   stroke: "#333", // optional outline
                   strokeWidth: 1,
                 }}
+                barSize={40}
               />
               <Bar
                 dataKey="expense"
                 name="Expense"
                 fill="#fe6b3a"
                 radius={[20, 20, 0, 0]}
+                barSize={40}
                 activeBar={{
                   stroke: "#333", // optional outline
                   strokeWidth: 1,
