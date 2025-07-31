@@ -320,7 +320,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="w-full flex flex-col  xl:flex-row gap-4 items-center py-4">
+      <div className="w-full flex flex-col  xl:flex-row gap-4 py-4">
         <div className="w-full xl:w-1/2 bg-white dark:bg-zinc-800 dark:text-white shadow-lg shadow-zinc-300 dark:shadow-none rounded-xl py-2 px-2">
           <div className="flex w-full justify-between py-4">
             <h1 className="text-lg font-semibold">Expenses</h1>
