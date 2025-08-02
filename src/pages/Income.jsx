@@ -232,8 +232,8 @@ const Income = () => {
           
                         <Bar
                           dataKey="income"
-                          name="name"
-                          fill="#fe6b3a"
+                          name="income"
+                          fill="#8033fb"
                           radius={[20, 20, 0, 0]}
                           barSize={40}
                           activeBar={{
