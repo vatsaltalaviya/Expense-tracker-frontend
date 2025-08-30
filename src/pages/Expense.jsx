@@ -58,7 +58,7 @@ const Expense = () => {
   }, []);
   useEffect(() => {
     dispatch(getExpenseTrend(mode));
-  }, [mode,expense]);
+  }, [mode]);
 
   const ExpenseTransaction = useMemo(() => {
     return expense?.map((d) => {
@@ -95,8 +95,12 @@ const Expense = () => {
     };
     try {
       await dispatch(addExpense(expenseData))
-        .then(() => setshowAddExpense(false))
-        .then(() => dispatch(getExpense(id)));
+        .unwrap()
+        .then(() => {
+          setshowAddExpense(false);
+          dispatch(getExpense(id));
+          dispatch(getExpenseTrend(mode));
+        })
     } catch (error) {
       console.error(error);
     }
@@ -112,7 +116,7 @@ const Expense = () => {
     try {
       await dispatch(deleteExpense(Id)).then(() => {
         dispatch(getExpense(id));
-        dispatch(getExpenseTrend());
+        dispatch(getExpenseTrend(mode));
       });
     } catch (error) {
       console.error(error);
@@ -207,7 +211,7 @@ const Expense = () => {
         ) : (
           <ResponsiveContainer width="100%" height={400} className={`px-4`}>
             <BarChart width={600} height={300} data={ExpenseTrend}>
-              <XAxis dataKey='name' />
+              <XAxis dataKey="name" />
               <YAxis />
               <Tooltip
                 contentStyle={{

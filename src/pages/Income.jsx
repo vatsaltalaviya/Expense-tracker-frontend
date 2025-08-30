@@ -29,20 +29,18 @@ const Income = () => {
   const [desc, setdesc] = useState("");
   const [mode, setmode] = useState("yearly");
   const [bars, setBars] = useState(6); // default to 6
-    const isDarkMode = useIsDarkMode();
-  
-    useEffect(() => {
-      const handleResize = () => {
-        setBars(window.innerWidth < 640 ? 4 : 6); // sm breakpoint in Tailwind is 640px
-        
-      };
-  
-      handleResize(); // call on mount
-      window.addEventListener("resize", handleResize);
-  
-      return () => window.removeEventListener("resize", handleResize);
-    }, []);
-  
+  const isDarkMode = useIsDarkMode();
+
+  useEffect(() => {
+    const handleResize = () => {
+      setBars(window.innerWidth < 640 ? 4 : 6); // sm breakpoint in Tailwind is 640px
+    };
+
+    handleResize(); // call on mount
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const dispatch = useDispatch();
   const { income, incomeTrend, trendLoading, incomeLoading, AddincomeLoading } =
@@ -50,14 +48,10 @@ const Income = () => {
   const id = localStorage.getItem("userid");
   useEffect(() => {
     dispatch(getIncome(id));
- 
   }, []);
   useEffect(() => {
-   
     dispatch(getIncomeTrend(mode));
   }, [mode]);
-
-
 
   const IncomeTransaction = useMemo(() => {
     return income?.map((d) => {
@@ -79,10 +73,8 @@ const Income = () => {
     });
   }, [income]);
   const IncomeTrend = useMemo(() => {
-  return incomeTrend?.filter((d) => d.income !== 0);
-}, [incomeTrend]);
-
- 
+    return incomeTrend?.filter((d) => d.income !== 0);
+  }, [incomeTrend]);
 
   const handlesubmit = async (e) => {
     e.preventDefault();
@@ -96,8 +88,12 @@ const Income = () => {
     };
     try {
       await dispatch(addIncome(incomeData))
-        .then(() => setshowAddIncome(false))
-        .then(() => dispatch(getIncome(id)));
+        .then(() => {
+          setshowAddIncome(false);
+          dispatch(getIncome(id))
+          dispatch(getIncomeTrend(mode));
+        })
+        
     } catch (error) {
       console.error(error);
     }
@@ -186,63 +182,62 @@ const Income = () => {
               Track your earning overtime and analyze your income trands
             </h3>
           </div>
-         <div className="space-x-3">
-           <select
-            value={mode}
-            onChange={(e) => setmode(e.target.value)}
-            className="px-4 py-2 rounded-lg  bg-white dark:text-white dark:bg-zinc-900 text-gray-700 focus:ring-1 "
-          >
-            <option value="yearly">Year</option>
-            <option value="monthly">Month</option>
-          </select>
-           <button
-            onClick={() => setshowAddIncome(true)}
-            className="text-primary dark:text-white text-lg px-2 py-2 font-medium border bg-zinc-200/20 rounded border-zinc-500/15"
-          >
-            Add Income
-          </button>
-         
-         </div>
+          <div className="space-x-3">
+            <select
+              value={mode}
+              onChange={(e) => setmode(e.target.value)}
+              className="px-4 py-2 rounded-lg  bg-white dark:text-white dark:bg-zinc-900 text-gray-700 focus:ring-1 "
+            >
+              <option value="yearly">Year</option>
+              <option value="monthly">Month</option>
+            </select>
+            <button
+              onClick={() => setshowAddIncome(true)}
+              className="text-primary dark:text-white text-lg px-2 py-2 font-medium border bg-zinc-200/20 rounded border-zinc-500/15"
+            >
+              Add Income
+            </button>
+          </div>
         </div>
         {trendLoading ? (
-          <BarChartSkeleton bars={bars}/>
+          <BarChartSkeleton bars={bars} />
         ) : (
           <ResponsiveContainer width="100%" height={400} className={`px-4`}>
-                      <BarChart width={600} height={300} data={IncomeTrend}>
-                        <XAxis dataKey='name' />
-                        <YAxis />
-                        <Tooltip
-                          contentStyle={{
-                            backgroundColor: isDarkMode ? "#333" : "#fff", // dark/light background
-                            borderRadius: "8px",
-                            border: "none",
-                          }}
-                          itemStyle={{
-                            color: isDarkMode ? "#fff" : "#000", // text color based on mode
-                            fontSize: "14px",
-                          }}
-                          labelStyle={{ color: isDarkMode ? "#ccc" : "#333" }}
-                          formatter={(value, name) => [
-                            `₹${value}`,
-                            name === "income" ? "Income" : "Expense",
-                          ]}
-                        />
-                        <Legend />
-                        {/* <CartesianGrid stroke="#ccc" strokeDasharray="5 5" /> */}
-          
-                        <Bar
-                          dataKey="income"
-                          name="income"
-                          fill="#8033fb"
-                          radius={[20, 20, 0, 0]}
-                          barSize={40}
-                          activeBar={{
-                            stroke: "#333", // optional outline
-                            strokeWidth: 1,
-                          }}
-                        />
-                      </BarChart>
-                    </ResponsiveContainer>
+            <BarChart width={600} height={300} data={IncomeTrend}>
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: isDarkMode ? "#333" : "#fff", // dark/light background
+                  borderRadius: "8px",
+                  border: "none",
+                }}
+                itemStyle={{
+                  color: isDarkMode ? "#fff" : "#000", // text color based on mode
+                  fontSize: "14px",
+                }}
+                labelStyle={{ color: isDarkMode ? "#ccc" : "#333" }}
+                formatter={(value, name) => [
+                  `₹${value}`,
+                  name === "income" ? "Income" : "Expense",
+                ]}
+              />
+              <Legend />
+              {/* <CartesianGrid stroke="#ccc" strokeDasharray="5 5" /> */}
+
+              <Bar
+                dataKey="income"
+                name="income"
+                fill="#8033fb"
+                radius={[20, 20, 0, 0]}
+                barSize={40}
+                activeBar={{
+                  stroke: "#333", // optional outline
+                  strokeWidth: 1,
+                }}
+              />
+            </BarChart>
+          </ResponsiveContainer>
         )}
       </div>
       <div className="w-full bg-white dark:bg-zinc-800 rounded-lg max-h-[50vh] mt-5 shadow-lg px-4 py-4 overflow-x-auto noscrollbar">
@@ -291,7 +286,10 @@ const Income = () => {
               <TableLoading />
             ) : (
               IncomeTransaction?.map((data, i) => (
-                <tr key={i} className="hover:bg-gray-100 dark:hover:bg-gray-800">
+                <tr
+                  key={i}
+                  className="hover:bg-gray-100 dark:hover:bg-gray-800"
+                >
                   <td
                     className={`text-sm px-2 py-3 font-semibold border-t text-blue-500 border-t-gray-500/20`}
                   >
@@ -437,11 +435,11 @@ function TableLoading() {
     </>
   );
 }
-function BarChartSkeleton({bars}) {
+function BarChartSkeleton({ bars }) {
   return (
     <div className="w-full h-[300px] p-4 animate-pulse bg-gray-100 rounded-xl">
       <div className="h-full flex items-end justify-between space-x-2">
-        {Array.from({ length: bars}).map((_, i) => (
+        {Array.from({ length: bars }).map((_, i) => (
           <div key={i} className="flex flex-col items-center space-y-1">
             <div
               className="bg-gray-300 rounded-md w-20"
