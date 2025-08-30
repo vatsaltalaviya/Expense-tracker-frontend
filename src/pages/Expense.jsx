@@ -58,7 +58,7 @@ const Expense = () => {
   }, []);
   useEffect(() => {
     dispatch(getExpenseTrend(mode));
-  }, [mode]);
+  }, [mode,expense]);
 
   const ExpenseTransaction = useMemo(() => {
     return expense?.map((d) => {
